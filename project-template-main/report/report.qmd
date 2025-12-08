@@ -1,9 +1,10 @@
 ---
 title: Impact of working remotely on social wellbeing and productivity
 author:
- - Name I, First Name I
- - Name II, First Name II
- - Name III, First Name III
+ - Amaury Chartier
+ - Valentine Salvat
+ - Thomas Blondel 
+ - Elisa Rigazzio
 institute: Name of the University
 date: today
 title-block-banner: "#0095C8" # chosen for the university of lausanne
