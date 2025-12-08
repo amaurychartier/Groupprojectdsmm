@@ -115,8 +115,8 @@ Every plot in your report should have:
 
 Summarize the main insights from your exploratory analysis. **Always reference your figures when discussing findings and provide thorough interpretation!**
 
-1. **Distribution patterns**: The performance scores shown in @fig-performance-dist follow an approximately normal distribution with a mean of `{python} f'{dummy_performance["performance"].mean():.2f}'` and standard deviation of `{python} f'{dummy_performance["performance"].std():.2f}'`. 
-   
+1. **Distribution patterns**: The performance scores shown in @fig-performance-dist follow an approximately normal distribution with a mean of 
+
    **Interpretation**: This normal distribution suggests that most students perform around the average, with fewer students at the extremes (very high or very low scores). The relatively small standard deviation indicates consistent performance across the group. This pattern is typical in educational settings and suggests that the assessment was well-calibrated meaning not too easy (which would cause ceiling effects) nor too difficult (which would cause floor effects). The normality assumption also validates the use of parametric statistical tests for subsequent analyses.
 
 2. **Outliers and data quality**: The box plot (@fig-performance-box) reveals minimal outliers, with only a few observations falling below the lower whisker.
