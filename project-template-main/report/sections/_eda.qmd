@@ -37,94 +37,9 @@ Examine each variable individually to understand its distribution, central tende
 
 ## Distribution Plot
 
-```{python}
-#| label: fig-performance-dist
-#| fig-cap: "Distribution of performance scores showing approximately normal distribution"
-# Code visibility controlled by format settings in report.qmd
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-import numpy as np
-
-# Set publication-quality style
-sns.set_theme(style="whitegrid", context="notebook", 
-              palette="colorblind", font_scale=1.1)
-
-# Create dummy data for demonstration
-np.random.seed(42)
-dummy_performance = pd.DataFrame({
-    "instructor": np.random.choice(["Ilia", "Jane", "John"], size=200),
-    "performance": np.random.normal(0.90, 0.05, size=200).clip(0, 1)
-})
-
-# Create figure
-fig, ax = plt.subplots(figsize=(8, 5))
-
-# Histogram with KDE
-sns.histplot(data=dummy_performance, x="performance", kde=True, 
-             bins=30, color='steelblue', alpha=0.6, ax=ax,
-             edgecolor='black', linewidth=0.5)
-
-# Customize plot
-ax.set_title("Distribution of Student Performance Scores", 
-             fontsize=14, fontweight='bold', pad=15)
-ax.set_xlabel("Performance Score", fontsize=12)
-ax.set_ylabel("Frequency", fontsize=12)
-ax.grid(True, alpha=0.3, linestyle='--')
-
-# Add mean line
-mean_perf = dummy_performance["performance"].mean()
-ax.axvline(mean_perf, color='red', linestyle='--', linewidth=2, 
-           label=f'Mean = {mean_perf:.3f}')
-ax.legend(fontsize=10)
-
-plt.tight_layout()
-plt.show()
-```
-
 ## Summary Statistics
 
-```{python}
-#| label: tbl-summary-stats
-#| tbl-cap: "Summary statistics for performance scores"
-# Code visibility controlled by format settings in report.qmd
-
-# Display comprehensive summary statistics
-summary_stats = dummy_performance["performance"].describe()
-print("\n=== Performance Summary Statistics ===")
-print(summary_stats.to_string())
-
-# Additional statistics
-print(f"\nSkewness: {dummy_performance['performance'].skew():.3f}")
-print(f"Kurtosis: {dummy_performance['performance'].kurtosis():.3f}")
-```
-
 ## Box Plot
-
-```{python}
-#| label: fig-performance-box
-#| fig-cap: "Box plot showing the five-number summary and outliers"
-# Code visibility controlled by format settings in report.qmd
-
-fig, ax = plt.subplots(figsize=(6, 4))
-
-# Box plot
-bp = ax.boxplot(dummy_performance["performance"], vert=True, patch_artist=True,
-                labels=["Performance"],
-                boxprops=dict(facecolor='lightblue', edgecolor='black', linewidth=1.5),
-                medianprops=dict(color='red', linewidth=2),
-                whiskerprops=dict(color='black', linewidth=1.5),
-                capprops=dict(color='black', linewidth=1.5))
-
-ax.set_title("Performance Score Distribution (Box Plot)", 
-             fontsize=13, fontweight='bold', pad=15)
-ax.set_ylabel("Performance Score", fontsize=11)
-ax.grid(True, axis='y', alpha=0.3, linestyle='--')
-
-plt.tight_layout()
-plt.show()
-```
 
 :::
 
@@ -165,58 +80,7 @@ Now let's examine how performance varies across different instructors.
 
 ## Grouped Comparison
 
-```{python}
-#| label: fig-performance-by-instructor
-#| fig-cap: "Performance scores grouped by instructor showing variation across instructors"
-# Code visibility controlled by format settings in report.qmd
-
-fig, ax = plt.subplots(figsize=(8, 5))
-
-# Violin plot with individual points
-sns.violinplot(data=dummy_performance, x="instructor", y="performance", 
-               ax=ax, inner="box", palette="Set2", linewidth=1.5,
-               edgecolor='black')
-
-# Overlay individual points
-sns.swarmplot(data=dummy_performance, x="instructor", y="performance", 
-              ax=ax, color='black', alpha=0.3, size=3)
-
-# Customize
-ax.set_title("Performance Scores by Instructor", 
-             fontsize=14, fontweight='bold', pad=15)
-ax.set_xlabel("Instructor", fontsize=12)
-ax.set_ylabel("Performance Score", fontsize=12)
-ax.grid(True, axis='y', alpha=0.3, linestyle='--')
-
-plt.tight_layout()
-plt.show()
-```
-
 ## Statistical Test
-
-```{python}
-#| label: tbl-anova-test
-#| tbl-cap: "ANOVA test results for performance differences across instructors"
-# Code visibility controlled by format settings in report.qmd
-
-from scipy import stats
-
-# Group data by instructor
-groups = [group["performance"].values 
-          for name, group in dummy_performance.groupby("instructor")]
-
-# Perform ANOVA
-f_stat, p_value = stats.f_oneway(*groups)
-
-print("\n=== ANOVA Test Results ===")
-print(f"F-statistic: {f_stat:.4f}")
-print(f"P-value: {p_value:.4f}")
-print(f"\nInterpretation: {'Significant' if p_value < 0.05 else 'Not significant'} difference at α=0.05")
-
-# Group means
-print("\n=== Group Means ===")
-print(dummy_performance.groupby("instructor")["performance"].mean().to_string())
-```
 
 :::
 
@@ -241,72 +105,7 @@ Every plot in your report should have:
 
 ## Correlation Heatmap
 
-```{python}
-#| label: fig-correlation-matrix
-#| fig-cap: "Correlation matrix showing relationships between numeric variables"
-# Code visibility controlled by format settings in report.qmd
-
-# Create dummy dataset with multiple numeric variables
-np.random.seed(42)
-n = 200
-dummy_data = pd.DataFrame({
-    'Age': np.random.randint(20, 60, n),
-    'Experience': np.random.randint(0, 30, n),
-    'Performance': np.random.normal(0.85, 0.1, n).clip(0, 1),
-    'Salary': np.random.normal(60000, 20000, n)
-})
-
-# Add some correlations
-dummy_data['Salary'] = 40000 + dummy_data['Experience'] * 1000 + np.random.normal(0, 5000, n)
-dummy_data['Performance'] = 0.6 + dummy_data['Experience'] * 0.01 + np.random.normal(0, 0.1, n)
-dummy_data['Performance'] = dummy_data['Performance'].clip(0, 1)
-
-# Calculate correlation matrix
-corr_matrix = dummy_data.corr()
-
-# Create heatmap
-fig, ax = plt.subplots(figsize=(7, 6))
-sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0,
-            square=True, linewidths=1, cbar_kws={"shrink": 0.8},
-            fmt='.3f', ax=ax, vmin=-1, vmax=1)
-
-ax.set_title("Correlation Matrix of Numeric Variables", 
-             fontsize=14, fontweight='bold', pad=15)
-
-plt.tight_layout()
-plt.show()
-```
-
 ## Scatter Plot
-
-```{python}
-#| label: fig-scatter-experience-performance
-#| fig-cap: "Scatter plot showing positive relationship between experience and performance"
-# Code visibility controlled by format settings in report.qmd
-
-fig, ax = plt.subplots(figsize=(8, 5))
-
-# Scatter plot with regression line
-sns.regplot(data=dummy_data, x='Experience', y='Performance',
-            ax=ax, scatter_kws={'alpha': 0.5, 's': 50, 'edgecolor': 'black'},
-            line_kws={'color': 'red', 'linewidth': 2})
-
-ax.set_title("Experience vs Performance", 
-             fontsize=14, fontweight='bold', pad=15)
-ax.set_xlabel("Years of Experience", fontsize=12)
-ax.set_ylabel("Performance Score", fontsize=12)
-ax.grid(True, alpha=0.3, linestyle='--')
-
-# Add correlation coefficient
-corr = dummy_data['Experience'].corr(dummy_data['Performance'])
-ax.text(0.05, 0.95, f'Correlation: {corr:.3f}', 
-        transform=ax.transAxes, fontsize=11,
-        verticalalignment='top',
-        bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-
-plt.tight_layout()
-plt.show()
-```
 
 :::
 

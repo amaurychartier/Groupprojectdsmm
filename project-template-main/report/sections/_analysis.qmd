@@ -21,27 +21,6 @@ Outline the statistical methods or models selected, along with the rationale for
 - **What** assumptions does it make, and do your data meet them?
 - **How** does this method help answer your research questions?
 
-```{python}
-#| label: initial-analysis
-
-from sklearn.linear_model import LinearRegression
-import numpy as np
-import pandas as pd
-
-model = LinearRegression()
-
-# Prepare the data (using dummy variables for categorical instructor variable)
-X = np.array(pd.get_dummies(data_clean[["instructor"]], drop_first=True))
-y = np.array(data_clean["performance"])
-
-# Fit the model
-model.fit(X, y)
-
-print("=== Linear Regression Results ===")
-print(f"Coefficients: {model.coef_}")
-print(f"Intercept: {model.intercept_:.4f}")
-print(f"R-squared: {model.score(X, y):.4f}")
-```
 
 ::: {.callout-important}
 ## Interpretation is Essential!
