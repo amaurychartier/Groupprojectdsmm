@@ -1,84 +1,75 @@
 # Data
 
 ## Sources
-Describe the sources of your data, such as public datasets, API collections, or scraped data. 
+The dataset used in this project is the 2020 Remote Working Survey, part of the NSW Remote Working Survey series, publicly available through the New South Wales Government’s Open Data Portal. “Data source: Remote working survey 2020””
+The 2020 survey was conducted during August and September 2020 and aimed to understand workers experiences and attitudes toward remote and hybrid working following the first phase of the COVID-19 pandemic to study the impact of remote work on professional and personal well-being.
 
-::: {.callout-important}
-## Data Source Documentation
+To be eligible, respondents had to:
+- be employed NSW residents
+- have experience of remote working in their current job. After excluding unemployed individuals and those whose occupations 
+cannot be performed remotely (dentists, cashiers, cleaners), the sample represents approximately 59% of NSW workers.
 
-Always include the **URL** where the data can be accessed. This is essential for reproducibility and evaluation. For example "Data source: [Kaggle Insurance Dataset](https://www.kaggle.com/datasets/example)"". Also mention when the data was accessed.
-:::
+This dataset is the 2020 wave of the survey. A second wave was collected in March and April 2021. For the present analysis, only the 2020 dataset is being processed and explored. Once the analysis of this wave is finalized, it will be possible to extend the project by including and comparing the 2021 dataset to identify how remote work patterns evolved over time.
 
 ## Description
-Summarize the main features of the dataset, including the types of variables, their formats, and any relevant metadata.
+The cleaned 2020 NSW Remote Working Survey dataset contains four main types of variables: categorical, ordinal, numeric, and binary.
+- The categorical variables describe qualitative characteristics of respondents and their employment context, such as Industry, Job_type, Organisation_Size, Household, and Years_in_job. These variables are stored as text and provide context for grouping and comparison across sectors or demographic profiles.
+- The ordinal variables represent ordered responses on Likert scales, reflecting opinions and perceptions about remote working. Variables such as Org_encouraged_remote_last_year, Collaboration_remote_last_year, Org_encouraged_remote_3_months, and Collaboration_remote_3_months are encoded numerically from 1 (“Strongly disagree”) to 5 (“Strongly agree”), allowing for quantitative analysis of attitudes.
+- The numeric variables capture measurable quantities including time allocation, remote work proportions, and productivity. Examples include Age, Remote_pct_last_year, Preferred_remote_last_year, Productivity_remote_vs_workplace, and several variables representing hours spent on commuting, working, and personal or domestic activities. These are stored as integers or floats, making them suitable for descriptive statistics and correlation analysis.
+- The binary variables (Gender, Managing_position) indicate Male/Femal or Yes/No conditions, encoded as 0 and 1. These variables enable comparisons between distinct groups.
+
+The dataset also contains several important pieces of metadata that ensure its quality and usability for analysis. Each observation is identified by a unique respondent code (Response_ID), which guarantees traceability and prevents duplication during data processing.
+
+In addition, all variable names were standardized to concise, descriptive identifiers (Org_encouraged_remote_last_year) to make the variables easier to read, reuse, and analyze in statistical software. This naming convention makes the analysis process simpler and clearer throughout the project.
 
 ::: {.callout-note}
 ## Dataset Overview Template
 
 Provide a clear summary:
 
-- **Number of observations**: X rows
-- **Number of variables**: Y columns
-- **Time period**: Start date to end date
-- **Geographic coverage**: Region/Country
-- **Key variables**: List the most important variables for your analysis
+- **File used:** 2020_rws-updated.csv
+- **Format: CSV (comma-separated values)
+- **Encoding: latin-1 (ISO-8859-1) (Remark: when loading the dataset in Python (Google Colab), attempting to read with utf-8 caused a UnicodeDecodeError due to typographic apostrophes and special characters. The correct parameter encoding latin1 was required to successfully load the data.)
+- **Memory usage:** approximately 7.46 MB
+- **Number of observations:** 1507 respondents (1370 rows after cleaning)
+- **Number of variables:** 73 columns (25 after cleaning)
+- **Time period:** August and September 2020
+- **Geographic coverage:** New South Wales, Australia
+- **Key variables:** Gender, Age, Job_type, Organisation_Size, Managing_position, Remote_pct_last_year, Preferred_remote_last_year, Org_encouraged_remote_last_year, Collaboration_remote_last_year, Productivity_remote_vs_workplace
+
 :::
 
 ## Loading Data
-
-::: {.callout-tip}
-## Loading Data Best Practices
-
-1. **Use relative paths** via `project_root` for reproducibility
-2. **Check data types** after loading
-3. **Inspect the first few rows** to verify correct loading
-4. **Document any loading parameters** (e.g., encoding, delimiter)
-
-**Important**: Do not change the data loading approach shown below. The template uses `project_root` from the setup chunk to ensure your code works regardless of where the report is run from.
-:::
 
 ```{python}
 #| label: load-data
 # Code visibility controlled by format settings in report.qmd
 #| output: true
 
-"""Example of loading data using pandas with proper path handling."""
-
 import pandas as pd
-from IPython.display import display
-from quarto_runtime import project_root
+import numpy as np
+import warnings
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly as py
+import plotly.graph_objs as go
+import statistics
 
-# Define the path to raw data using project_root
-# This ensures the code works regardless of where it's run from
-raw_data_path = project_root / "data" / "raw" / "data_raw.csv"
+url = "https://data.nsw.gov.au/data/dataset/4ff1a0de-9bff-4b45-9f93-5a9bf44df257/resource/5b843384-5aea-4bc4-9935-0dd91ea2559d/download/2020_rws-updated.csv"
 
 # Load the data
-data = pd.read_csv(raw_data_path, skipinitialspace=True)
+df = pd.read_csv(url, encoding="ISO-8859-1")
 
 # Basic data inspection
-print(f"Dataset shape: {data.shape[0]} rows × {data.shape[1]} columns")
-print(f"\nColumn names: {list(data.columns)}")
-print(f"\nData types:\n{data.dtypes}")
+print(f"Dataset shape: {df.shape[0]} rows × {df.shape[1]} columns")
+print(f"\nColumn names: {list(df.columns)}")
+print(f"\nData types:\n{df.dtypes}")
 
 # Display first few rows
 print("\nFirst 5 rows:")
-display(data.head())
+display(df.head())
 ```
 
-::: {.callout-tip}
-## Alternative Data Sources
-
-Depending on your project, you might load data from:
-
-- **CSV files**: `pd.read_csv(filepath)`
-- **Excel files**: `pd.read_excel(filepath, sheet_name='Sheet1')`
-- **JSON files**: `pd.read_json(filepath)`
-- **APIs**: Using `requests` library + `pd.DataFrame(data)`
-- **Databases**: Using `pd.read_sql(query, connection)`
-- **Web scraping**: Using `beautifulsoup4` or `scrapy`
-
-Always document your data acquisition process!
-:::
 
 ## Wrangling
 
