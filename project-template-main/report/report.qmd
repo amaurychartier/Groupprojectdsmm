@@ -1,7 +1,7 @@
 ---
 title: Impact of working remotely on social wellbeing and productivity
 author:
- - Name I, First Name I
+ - Amaury, Chartier
  - Name II, First Name II
  - Name III, First Name III
 institute: Name of the University
