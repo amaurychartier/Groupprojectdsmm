@@ -1,7 +1,19 @@
 # Data
 
 ## Sources
-Describe the sources of your data, such as public datasets, API collections, or scraped data. 
+**Describe test the sources of your data, such as public datasets, API collections, or scraped data.** 
+
+The dataset used in this project is the 2020 Remote Working Survey, part of the NSW Remote Working Survey series, publicly available through the New South Wales Government’s Open Data Portal. "Data source: [Remote working survey 2020](https://data.nsw.gov.au/data/dataset/nsw-remote-working-survey)""  
+
+The 2020 survey was conducted during August and September 2020 and aimed to understand workers experiences and attitudes toward remote and hybrid working following the first phase of the COVID-19 pandemic to study the impact of remote work on professional and personal well-being. 
+
+To be eligible, respondents had to: 
+
+- be employed NSW residents  
+- have experience of remote working in their current job 
+After excluding unemployed individuals and those whose occupations cannot be performed remotely (dentists, cashiers, cleaners), the sample represents approximately 59% of NSW workers. 
+
+This dataset is the 2020 wave of the survey. A second wave was collected in March and April 2021. For the present analysis, only the 2020 dataset is being processed and explored. Once the analysis of this wave is finalized, it will be possible to extend the project by including and comparing the 2021 dataset to identify how remote work patterns evolved over time. 
 
 ::: {.callout-important}
 ## Data Source Documentation
@@ -11,6 +23,21 @@ Always include the **URL** where the data can be accessed. This is essential for
 
 ## Description
 Summarize the main features of the dataset, including the types of variables, their formats, and any relevant metadata.
+
+The cleaned 2020 NSW Remote Working Survey dataset contains four main types of variables: categorical, ordinal, numeric, and binary.
+
+- The categorical variables describe qualitative characteristics of respondents and their employment context, such as Industry, Job_type, Organisation_Size, Household, and Years_in_job. These variables are stored as text and provide context for grouping and comparison across sectors or demographic profiles.
+
+- The ordinal variables represent ordered responses on Likert scales, reflecting opinions and perceptions about remote working. Variables such as Org_encouraged_remote_last_year, Collaboration_remote_last_year, Org_encouraged_remote_3_months, and Collaboration_remote_3_months are encoded numerically from 1 (“Strongly disagree”) to 5 (“Strongly agree”), allowing for quantitative analysis of attitudes.
+
+- The numeric variables capture measurable quantities including time allocation, remote work proportions, and productivity. Examples include Age, Remote_pct_last_year, Preferred_remote_last_year, Productivity_remote_vs_workplace, and several variables representing hours spent on commuting, working, and personal or domestic activities. These are stored as integers or floats, making them suitable for descriptive statistics and correlation analysis.
+
+- The binary variables (Gender, Managing_position) indicate Male/Femal or Yes/No conditions, encoded as 0 and 1. These variables enable comparisons between distinct groups.
+
+
+The dataset also contains several important pieces of metadata that ensure its quality and usability for analysis. Each observation is identified by a unique respondent code (Response_ID), which guarantees traceability and prevents duplication during data processing.
+
+In addition, all variable names were standardized to concise, descriptive identifiers (Org_encouraged_remote_last_year) to make the variables easier to read, reuse, and analyze in statistical software. This naming convention makes the analysis process simpler and clearer throughout the project.
 
 ::: {.callout-note}
 ## Dataset Overview Template
@@ -22,23 +49,96 @@ Provide a clear summary:
 - **Time period**: Start date to end date
 - **Geographic coverage**: Region/Country
 - **Key variables**: List the most important variables for your analysis
+- **File used**: 2020_rws-updated.csv
+- **Format**: CSV (comma-separated values) 
+- **Encoding**: latin-1 (ISO-8859-1) (Remark: when loading the dataset in Python (Google Colab), attempting to read with utf-8 caused a UnicodeDecodeError due to typographic apostrophes and special characters. The correct parameter encoding latin1 was required to successfully load the data.)
+- **Memory usage**: approximately 7.46 MB 
+- **Number of observations**: 1507 respondents (1507 rows) 
+- **Number of variables**: 73 columns 
+- **Time period**: August and September 2020
+- **Geographic coverage**: New South Wales, Australia 
+- **Key variables**: Gender, Age, Job_type, Organisation_Size, Managing_position, Remote_pct_last_year, Preferred_remote_last_year, Org_encouraged_remote_last_year, Collaboration_remote_last_year, Productivity_remote_vs_workplace
 :::
 
 ## Loading Data
 
-::: {.callout-tip}
-## Loading Data Best Practices
+For the moment, the dataset used in this report is the original raw CSV file, loaded in its initial form for documentation purposes. All data cleaning, transformations, and recoding steps are currently being carried out in Google Colab, where the full preprocessing workflow is developed and tested.
+Once this cleaning process is fully completed, the resulting dataset will be exported again as a new, clean CSV file (e.g., remote_working_2020_clean.csv). This cleaned version will then be imported into the Quarto environment for the final stages of the project.
 
-1. **Use relative paths** via `project_root` for reproducibility
-2. **Check data types** after loading
-3. **Inspect the first few rows** to verify correct loading
-4. **Document any loading parameters** (e.g., encoding, delimiter)
+Following best practices, the file is loaded using a relative path via project_root, ensuring that the document remains fully reproducible regardless of the execution location. Because the original file contained specific typographic characters that caused decoding issues during import, the dataset is read using the latin-1 encoding.
 
-**Important**: Do not change the data loading approach shown below. The template uses `project_root` from the setup chunk to ensure your code works regardless of where the report is run from.
+After loading the file, several checks were performed to confirm correct import:
+verification of the dataset dimensions,
+inspection of column names and data types (df.info()),
+preview of the first rows to ensure values were properly formatted.
+These steps guarantee that the dataset is correctly imported and ready for subsequent exploratory analysis.
+
+::: callout-tip
+#| label: load-data-test
+
+#Code visibility controlled by format settings in report.qmd
+
+#| output: true
+
+"""Example of loading data using pandas with proper path handling."""
+
+import pandas as pd
+from IPython.display import display
+from quarto_runtime import project_root
+
+#Define the path to raw data using project_root
+
+#This ensures the code works regardless of where it's run from
+raw_data_path = project_root / "data" / "raw" / "2020_rws-updated.csv"
+
+#Load the data
+data = pd.read_csv(raw_data_path, encoding="ISO-8859-1")
+
+#Basic data inspection
+print(f"Dataset shape: {data.shape[0]} rows × {data.shape[1]} columns")
+print(f"\nColumn names: {list(data.columns)}")
+print(f"\nData types:\n{data.dtypes}")
+
+#Display first few rows
+#print("\nFirst 5 rows:")
+#display(data.head())
 :::
 
+::: callout-tip
+#| label: clean-data-test
+
+#Code visibility controlled by format settings in report.qmd
+
+#| output: true
+
+"""We clean the data."""
+
+def clean_data(df):
+    
+    df[df.duplicated(keep=False)]
+    # delete all the columns with think are not significant to lower the size of the dataset for better readibility
+    cols_to_drop = [0,4, 6, 11, 14, 15, 16, 18, 22, 23, 24, 26, 28, 29, 30, 31] + list(range(41, 73))
+    df = df.drop(df.columns[cols_to_drop], axis=1)
+    return df
+
+data2 = clean_data(data)
+
+#Basic data inspection
+
+print(f"Dataset shape: {data2.shape[0]} rows × {data2.shape[1]} columns")
+print(f"\nColumn names: {list(data2.columns)}")
+print(f"\nData types:\n{data2.dtypes}")
+
+#Display first few rows
+
+#print("\nFirst 5 rows:")
+
+#display(data2.head())
+:::
+
+
 ```{python}
-#| label: load-data
+#| label: load-data-test
 # Code visibility controlled by format settings in report.qmd
 #| output: true
 
@@ -50,10 +150,10 @@ from quarto_runtime import project_root
 
 # Define the path to raw data using project_root
 # This ensures the code works regardless of where it's run from
-raw_data_path = project_root / "data" / "raw" / "data_raw.csv"
+raw_data_path = project_root / "data" / "raw" / "2020_rws-updated.csv"
 
 # Load the data
-data = pd.read_csv(raw_data_path, skipinitialspace=True)
+data = pd.read_csv(raw_data_path, encoding="ISO-8859-1")
 
 # Basic data inspection
 print(f"Dataset shape: {data.shape[0]} rows × {data.shape[1]} columns")
@@ -61,11 +161,49 @@ print(f"\nColumn names: {list(data.columns)}")
 print(f"\nData types:\n{data.dtypes}")
 
 # Display first few rows
-print("\nFirst 5 rows:")
-display(data.head())
+#print("\nFirst 5 rows:")
+#display(data.head())
 ```
 
+
+We clean the data
+
+```{python}
+#| label: clean-data-test
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+"""We clean the data."""
+
+def clean_data(df):
+    df[df.duplicated(keep=False)]
+    # delete all the columns with think are not significant to lower the size of the dataset for better readibility
+    cols_to_drop = [0,4, 6, 11, 14, 15, 16, 18, 22, 23, 24, 26, 28, 29, 30, 31] + list(range(41, 73))
+    df = df.drop(df.columns[cols_to_drop], axis=1)
+    return df
+
+data2 = clean_data(data)
+
+# Basic data inspection
+print(f"Dataset shape: {data2.shape[0]} rows × {data2.shape[1]} columns")
+print(f"\nColumn names: {list(data2.columns)}")
+print(f"\nData types:\n{data2.dtypes}")
+
+# Display first few rows
+#print("\nFirst 5 rows:")
+#display(data2.head())
+```
+
+
+
+
+
+
+
+
+
 ::: {.callout-tip}
+
 ## Alternative Data Sources
 
 Depending on your project, you might load data from:
@@ -85,6 +223,219 @@ Always document your data acquisition process!
 ### General Transformations
 Document the data preprocessing steps taken, including cleaning, transformation, and any merging of datasets.
 
+Several preprocessing and wrangling steps were performed to prepare the dataset for analysis. Before detailing each transformation.
+
+All preprocessing steps described below are fully reproducible and validated. Each transformation relies on deterministic Python operations (such as replace(), rename(), astype(), or simple arithmetic), meaning that re-running the same code on the raw dataset will always produce identical results. After every transformation, checks such as head(), value_counts(), or describe() were used to validate that the modifications were correctly applied and that the resulting values were coherent (age ranges, Likert scales, or percentage conversions).
+
+**Variable Duplicated**
+
+Before any transformation, it is essential to verify that each observation in the dataset is unique. Duplicate rows can bias the analysis by over representing certain respondents or records. Identifying and removing them ensures data integrity. 
+
+::: callout-tip
+## Code (duplicated)
+df[df.duplicated(keep=False)]
+
+#delete all the columns with think are not significant to lower the size of the dataset for better readibility
+
+cols_to_drop = [0,4.....] + list(range(41, 73))
+df = df.drop(df.columns[cols_to_drop], axis=1)
+:::
+
+This operation can be rerun on the raw dataset at any stage of the workflow, guaranteeing consistent detection of duplicated records.
+
+The command returned an empty DataFrame, confirming that no duplicate rows were present. Therefore, no observations were removed in this step.
+
+
+**Rename Columns**
+
+Renaming the original survey questions into shorter and clearer variable names was necessary to improve readability and make the dataset easier to work with.
+
+::: callout-tip
+## Code (rename column)
+rename_map = { 
+   
+    "Response ID": "Response_ID", 
+    
+    "What year were you born?": "Age", 
+    
+    ..... 
+    
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Caring and 
+    domestic responsibilities": "Domestic_hours_remote"} 
+
+df.rename(columns=rename_map, inplace=True)
+:::
+
+
+**Standard Name Organisation Size**
+
+The Organisation_Size variable was recoded by replacing the long original text categories with shorter, standardised. To make grouping and comparison more intuitive.
+
+::: callout-tip
+## Code (standard name Organisation Size)
+df["Organisation_Size"] = df["Organisation_Size"].replace({
+   
+    "I am the only employee": "Solo business",
+   
+    "Between 1 and 4": "Micro enterprise",
+ 
+  .....
+   
+    "More than 200": "Large / Corporate enterprise"}).fillna("Other / Unspecified")
+:::
+
+
+**Binary Variables**
+
+The variables Gender and Managing_position, the original text responses were converted into binary categories to make them suitable for statistical analysis and group comparisons. Respondents who selected “Rather not say” for gender were removed, as this category represented only two individuals and could not form a meaningful subgroup. Gender was then encoded as 0 = Male and 1 = Female, while Managing_position was encoded as 0 = No and 1 = Yes, indicating whether the respondent supervises others. This transformation produces clean, consistent, and analysis-ready binary variables that can be easily used in descriptive statistics, visualisations, and modelling.
+
+::: callout-tip
+## Code (Binary: Gender & Managing Position)
+df = df[df["Gender"] != "Rather not say"]
+
+df["Gender"] = df["Gender"].replace({"Male": 0, "Female": 1}).astype("category")
+
+df["Managing_position"] = df["Managing_position"].replace({"No": 0, "Yes": 1}).astype("category")
+
+df = df.dropna(subset=["Managing_position"])
+:::
+
+
+**Variable Ages**
+
+The variable Age, the dataset originally reported the respondent’s year of birth. This information was converted into a more interpretable age variable by subtracting the birth year from 2020, the year the survey was conducted. For example, a respondent born in 1985 becomes 2020 − 1985 = 35 years old.
+Expressing this information directly as age is more intuitive and easier to interpret in descriptive statistics, comparisons, and visualisations.
+
+::: callout-tip
+## Code (Calculate age: convert birth year into age (as of 2020))
+df["Age"] = 2020 - df["Age"]
+:::
+
+
+**Variable Years in Job**
+
+The variable Years_in_job, the original responses were long text categories describing tenure intervals. These were simplified into shorter and more readable labels: “5+”, “5-”, and “1-”.
+This transformation keeps the original meaning while making the variable easier to interpret, compare, and visualise in tables and plots.
+
+::: callout-tip
+## Code (Years in job)
+df["Years_in_job"] = df["Years_in_job"].replace({
+   
+    "More than 5 years": "5+",
+   
+    "Between 1 and 5 years": "5-",
+    
+    "Between 6 and 12 months": "1-"})
+:::
+
+
+**Variable Likert Scale Mapping**
+
+The Likert-scale variables, this transformation allows these subjective perceptions to be analysed quantitatively. The four variables related to organisational support and collaboration were mapped using this scale.
+Any missing responses were replaced with the neutral value 3, corresponding to “Neither agree nor disagree”, to keep these observations in the dataset while avoiding bias from missing attitudes.
+
+::: callout-tip
+## Code (Likert scale mapping)
+likert_mapping = {
+    
+    "Strongly disagree": 1,
+    "Somewhat disagree": 2,
+    "Neither agree nor disagree": 3,
+    "Somewhat agree": 4,
+    "Strongly agree": 5}
+
+likert_cols = [
+    
+    "Org_encouraged_remote_last_year",
+    "Collaboration_remote_last_year",
+    "Org_encouraged_remote_3_months",
+    "Collaboration_remote_3_months"]
+
+df[likert_cols] = df[likert_cols].replace(likert_mapping).fillna(3)
+:::
+
+
+**Variables Working Remotely**
+
+The variables describing the percentage of time spent or preferred working remotely, the original responses (“Less than 10% of my time”...“100% - All of my time”). These were first converted into numeric percentage values using a mapping dictionary. All four percentage-related variables were processed in the same way.
+Before applying the mapping, non-breaking spaces (\xa0) and extra whitespace were removed from the strings to avoid parsing issues. After the text values were mapped to numeric percentages (“80%” → 80), the values were converted into proportions between 0 and 1 by dividing by 100.
+
+For example:
+80 becomes 0.80
+50 becomes 0.50
+0 becomes 0.00
+
+This final step creates clean numerical variables that can be easily averaged, compared, or visualised in the analysis.
+
+::: callout-tip
+## Code (Remote Percentages Mapping)
+remote_mapping = {
+    
+    "Rarely or never": 0,
+    "Less than 10% of my time": 5,
+    
+    .....
+   
+    "40%": 40,
+    "50% - About half of my time": 50,
+    "50% - I spent about half of my time remote working": 50,
+    
+    .....
+    
+    "90%": 90,
+    "100% - All of my time": 100,
+    "100% - I spent all of my time remote working": 100,
+    "I would not have preferred to work remotely": 0}
+
+percent_cols = [
+   
+    "Preferred_remote_last_year",
+    "Remote_pct_last_year",
+    "Remote_pct_last_3_months",
+    "Preferred_remote_3_months"]
+
+for col in percent_cols:
+    
+    df[col] = df[col].astype(str).str.replace("\xa0", "", regex=True).str.strip().replace(remote_mapping)
+    
+    df[col] = pd.to_numeric(df[col], errors="coerce") / 100  # Convert to proportion
+:::
+
+
+**Variables Productivity Cleaning**
+
+The variable Productivity_remote_vs_workplace, the survey responses (I’m 20% more productive when I work remotely” or “I’m 10% less productive”). These text responses were converted into clean numeric values using a custom parsing function.
+The mapping works as follows:
+Statements indicating more productive remotely return a positive percentage (“20% more productive” → +20).
+Statements indicating less productive remotely return a negative percentage (“10% less productive” → –10).
+Statements indicating no difference return 0.
+This transformation results in a numeric scale where positive values mean higher productivity when working remotely, negative values reflect lower productivity, and zero indicates no change. This allows the variable to be analysed quantitatively, averaged across groups, or used in visualisations.
+
+::: callout-tip
+## Code (Productivity Cleaning)
+def parse_productivity(val):
+    
+    if pd.isna(val):
+        return None
+    
+    val = str(val).replace("\x92", "'")  # Fix apostrophe
+   
+    if "more productive" in val:
+        return int(val.split("%")[0].replace("I'm ", "").strip())
+   
+    elif "less productive" in val:
+        return -int(val.split("%")[0].replace("I'm ", "").strip())
+    
+    elif "same" in val:
+        return 0
+    
+    return None
+
+df["Productivity_remote_vs_workplace"] = df
+
+["Productivity_remote_vs_workplace"].apply(parse_productivity)
+:::
+
 ::: {.callout-caution}
 ## Document Your Transformations
 
@@ -98,6 +449,33 @@ Every transformation should be:
 
 ### Spotting Mistakes and Missing Data
 Discuss any identified mistakes or issues with missing data and describe your approach to handling them.
+
+
+Before conducting the analysis, the dataset was reviewed to identify missing values, inconsistencies, and unusually small categories. This ensures that only reliable and interpretable data are used in the following steps.
+
+**Identified missing data**
+
+- Most variables contained very few missing values, mainly in attitudinal questions where some respondents simply did not answer.
+
+- Additional missingness appeared when converting textual inputs (percentages or productivity statements) into numeric formats, entries that could not be parsed were intentionally converted to NaN.
+
+- The inspection of category sizes showed that some groups were extremely small, such as the “Rather not say” gender category (2 respondents), which was removed because it cannot support meaningful analysis.
+
+**Approach to handling missing data**
+
+- Deletion was applied when missingness or category size was extremely small and analytically useless.
+
+- Imputation with a neutral value (3 = Neither agree nor disagree) was used for missing Likert-scale answers to preserve observations without creating bias.
+
+- Conversion to numeric with errors="coerce" was used for percentage and productivity variables, producing valid NaN values when entries could not be interpreted.
+
+Because missingness was limited and mostly isolated to subjective questions, more complex methods were not necessary.
+
+**Future handling of small or irrelevant categories**
+As the analysis progresses, if additional categories are found to be too small to contribute meaningfully, they will be removed, flagged, or when conceptually appropriate grouped together with similar categories to preserve statistical power.
+
+**Future variable selection**
+Some variables will ultimately explain the effects of remote work on health, productivity, or work life balance better than others. Variables that show no meaningful correlation or explanatory power in later stages of the project will also be removed to keep the analysis focused, interpretable, and relevant.
 
 ::: {.callout-warning}
 ## Missing Data Strategies
@@ -114,6 +492,43 @@ Different approaches for different situations:
 
 ### Listing Anomalies and Outliers
 Identify any anomalies or outliers discovered, along with your approach to assessing their impact.
+
+A detailed inspection of the numeric variables, using both summary statistics and histogram visualisations, revealed several anomalies and potential outliers in the dataset.
+
+**Detected anomalies**
+
+- Age variable:
+ Two respondents appear with an age of 120 years, which is biologically impossible and indicates a clear data entry error. This type of anomaly commonly occurs when the birth year is mistyped—for example, entering 1900 instead of 2000, or 2005 instead of 1920—which produces unrealistic age values. These observations will therefore be removed, while other extreme but plausible ages (such as 75 or 83) are retained at this stage. The minimum value (19) is plausible for entry-level workers.
+
+- Domestic_hours_workplace:
+ A single observation of –1 hour is impossible and indicates a recording error.
+
+- Working and commuting time variables:
+ Extremely high records were observed, such as 23 hours of work in a day or 10–12 hours of commuting.
+
+ While unlikely, these may represent exceptional cases (long-distance travel, extended shifts). They are retained unless later analysis shows they distort results.
+
+- Commute_hours_remote:
+ Values up to 12 hours on remote days are implausible and likely due to misinterpretation or input mistakes.
+
+- Productivity variable:
+ Extreme values (+50%, –50%) appear in the data but remain plausible since the question explicitly asked respondents to report percentage differences.
+
+**Approach to handling outliers**
+
+- Outliers were evaluated using:
+   - Visual inspection (histograms from univariate EDA)
+   - Summary statistics (min/max, interquartile ranges)
+   - Domain knowledge (negative hours, impossible ages)
+
+- Following best practices
+   - Impossible values (age = 120, domestic hours = –1) will be removed before modelling.
+   - Extreme but plausible behaviours (very long workdays) are kept unless they later bias model results.
+   - Additional outliers identified during the analysis phase may be removed, flagged, or grouped depending on their relevance and impact.
+
+Outliers are not always errors; some reveal meaningful variability in remote work habits. The chosen approach maintains data integrity while ensuring that the analysis focuses on realistic, interpretable patterns.
+
+The following EDA sections will further analyse these variables to understand their patterns and relationships.
 
 ::: {.callout-tip}
 ## Outlier Detection Methods
