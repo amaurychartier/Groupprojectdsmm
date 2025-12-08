@@ -1,7 +1,9 @@
 # Introduction
 
 ## Project Goals
-Describe the main goals of the project, including the motivation behind the research and the key questions you aim to answer.
+Our objective in this project is to understand how remote work, following the COVID-19 pandemic, has changed firms’ work practices. During this period, many companies had no choice but to adopt remote working practices, reshaping traditional work environments. The main goal is to analyze how working remotely influences people’s mental health, job satisfaction, and performance levels. Using accurate data from the Remote Working Survey (2020), we want to explore factors such as communication satisfaction, work-life balance, social connection, and productivity outcomes, in order to understand whether remote work affects employees positively or negatively. By converting survey responses into numerical values, we can quantify attitudes toward remote work and compare groups such as gender, age, or employment type.
+
+As we began working with the dataset, we refined our focus on the social and psychological dimensions of remote work. To make the analysis easier to interpret, we also transformed qualitative survey responses into numerical values. And, in addition, we removed categories with very small sample sizes to keep the dataset consistent and avoid unreliable comparisons.
 
 ::: {.callout-tip}
 ## Writing Tip: Make it Relevant
