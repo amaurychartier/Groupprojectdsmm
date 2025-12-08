@@ -6,16 +6,16 @@ Our objective in this project is to understand how remote work, following the CO
 As we began working with the dataset, we refined our focus on the social and psychological dimensions of remote work. To make the analysis easier to interpret, we also transformed qualitative survey responses into numerical values. And, in addition, we removed categories with very small sample sizes to keep the dataset consistent and avoid unreliable comparisons.
 
 ## Research Questions
-•	How does remote work influence employees’ overall productivity?
-•	How does remote working affect employees’ ability to maintain social connections and avoid feelings of isolation?
-•	Has job satisfaction decreased or increased as a result of remote working conditions?
-•	Which factors contribute the most to employees’ overall satisfaction with remote work?
+- How does remote work influence employees’ overall productivity?
+- How does remote working affect employees’ ability to maintain social connections and avoid feelings of isolation?
+- Has job satisfaction decreased or increased as a result of remote working conditions?
+- Which factors contribute the most to employees’ overall satisfaction with remote work?
 
 ## Related Work
 
 In this section, we discuss the main academic studies, methods, and resources that guided our analysis of remote work and well-being. 
 
-#Domain literature#
+**Domain literature**
 
 A lot of studies have looked at how remote work affects people’s productivity, well-being, and social life, which helps us understand the context of our own project.
 
@@ -25,16 +25,16 @@ Another study by Correia et al. (2024) investigated how research on remote worke
 Finally, a well-known experiment by Bloom et al. (2013) showed that remote work can significantly improve productivity when employees have clear structures and good communication with their team. This connects directly to our analysis, since we also look at collaboration, communication, and satisfaction using the Remote Working Survey (2020).
 Overall, these studies confirm that the social, psychological, and performance-related impacts of remote work are important topics to explore, and they strongly support the research questions we chose for our project.
 
-#Methodological references#
+**Methodological references**
 
 For our project, we used a few common data-science methods that are usually applied in survey analysis. We started with simple descriptive statistics to get a first idea of the patterns in the data, things like averages, proportions, and basic comparisons between groups. We also looked at correlations to see how different variables are related, for example whether good communication or social well-being is linked to higher productivity. Since many of our questions were answered with text options (like “strongly agree”), we converted these answers into numbers using standard Likert-scale coding so that we could analyze them properly. 
 
 On the technical side, we followed the Python methods shown in Azizi (2025), which helped us clean the data and structure our exploratory analysis in Google Colab. We mainly used pandas for organizing and transforming the dataset (following McKinney, 2022), and matplotlib/seaborn to create the visualizations with the help of VanderPlas, 2016. These tools and references guided our process and helped us follow good data-science practices while analyzing the Remote Working Survey (2020).
 
-#Course material#
+**Course material**
 
 The structure of our project is inspired by the material used in class, especially the DSAS notes from Azizi (2025). These resources helped us understand how to organize our data analysis, clean our dataset, and apply basic Python techniques in Google Colab. With that said, we used the same approach shown in the course for tasks like loading data, creating new variables, handling missing values, and running exploratory data analysis. The examples provided in the course made it easier for us to use tools like pandas, matplotlib, and seaborn in a consistent way throughout the project.
 
-#Technical resources#
+**Technical resources**
 
 On the technical side, we mainly relied on a few well-known Python resources to help us structure and run our analysis. McKinney’s book (2022) guided us with all the pandas-related tasks, such as cleaning the dataset, creating new variables, and handling missing values. We also used matplotlib and seaborn to create readable plots for our visualizations by following VanderPlas's (2016) explanations.
