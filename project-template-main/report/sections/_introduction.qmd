@@ -14,8 +14,6 @@ Connect your project to real-world actuarial or insurance problems. For example,
 - Question 2: ...
 - (Add as necessary)
 
-
-
 ::: {.callout-important}
 ## Research Question Quality
 
