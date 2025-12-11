@@ -1,33 +1,33 @@
 # Introduction
 
 ## Project Goals
+
 Our objective in this project is to understand how remote work, following the COVID-19 pandemic, has changed firms’ work practices. During this period, many companies had no choice but to adopt remote working practices, reshaping traditional work environments. The main goal is to analyze how working remotely influences people’s mental health, job satisfaction, and performance levels. Using accurate data from the Remote Working Survey (2020), we want to explore factors such as communication satisfaction, work-life balance, social connection, and productivity outcomes, in order to understand whether remote work affects employees positively or negatively. By converting survey responses into numerical values, we can quantify attitudes toward remote work and compare groups such as gender, age, or employment type.
 
 As we began working with the dataset, we refined our focus on the social and psychological dimensions of remote work. To make the analysis easier to interpret, we also transformed qualitative survey responses into numerical values. And, in addition, we removed categories with very small sample sizes to keep the dataset consistent and avoid unreliable comparisons.
 
-## Research Questions
-- How does remote work influence employees’ overall productivity?
-- How does remote working affect employees’ ability to maintain social connections and avoid feelings of isolation?
-- Has job satisfaction decreased or increased as a result of remote working conditions?
-- Which factors contribute the most to employees’ overall satisfaction with remote work?
+## Research Questions 
+
+-   How does remote work influence employees’ overall productivity?
+-   How does remote working affect employees’ ability to maintain social connections and avoid feelings of isolation?
+-   Has job satisfaction decreased or increased as a result of remote working conditions?
+-   Which factors contribute the most to employees’ overall satisfaction with remote work?
 
 ## Related Work
 
-In this section, we discuss the main academic studies, methods, and resources that guided our analysis of remote work and well-being. 
+In this section, we discuss the main academic studies, methods, and resources that guided our analysis of remote work and well-being.
 
 **Domain literature**
 
 A lot of studies have looked at how remote work affects people’s productivity, well-being, and social life, which helps us understand the context of our own project.
 
-For example, a systematic review by Oakman et al. (2022) showed that working from home can improve productivity and work–life balance, but it can also lead to more isolation, communication problems, and mental stress. These points match the variables we analyze in our dataset, such as job satisfaction, social connection, and communication quality.
-Another study by Correia et al. (2024) investigated how research on remote workers has evolved over the years. They found that psychological factors like loneliness, emotional pressure, and reduced social interaction are becoming increasingly important in academic discussions. This supports our decision to focus mainly on the social and psychological side of remote work instead of technical aspects.
+For example, a systematic review by Oakman et al. (2022) showed that working from home can improve productivity and work–life balance, but it can also lead to more isolation, communication problems, and mental stress. These points match the variables we analyze in our dataset, such as job satisfaction, social connection, and communication quality. Another study by Correia et al. (2024) investigated how research on remote workers has evolved over the years. They found that psychological factors like loneliness, emotional pressure, and reduced social interaction are becoming increasingly important in academic discussions. This supports our decision to focus mainly on the social and psychological side of remote work instead of technical aspects.
 
-Finally, a well-known experiment by Bloom et al. (2013) showed that remote work can significantly improve productivity when employees have clear structures and good communication with their team. This connects directly to our analysis, since we also look at collaboration, communication, and satisfaction using the Remote Working Survey (2020).
-Overall, these studies confirm that the social, psychological, and performance-related impacts of remote work are important topics to explore, and they strongly support the research questions we chose for our project.
+Finally, a well-known experiment by Bloom et al. (2013) showed that remote work can significantly improve productivity when employees have clear structures and good communication with their team. This connects directly to our analysis, since we also look at collaboration, communication, and satisfaction using the Remote Working Survey (2020). Overall, these studies confirm that the social, psychological, and performance-related impacts of remote work are important topics to explore, and they strongly support the research questions we chose for our project.
 
 **Methodological references**
 
-For our project, we used a few common data-science methods that are usually applied in survey analysis. We started with simple descriptive statistics to get a first idea of the patterns in the data, things like averages, proportions, and basic comparisons between groups. We also looked at correlations to see how different variables are related, for example whether good communication or social well-being is linked to higher productivity. Since many of our questions were answered with text options (like “strongly agree”), we converted these answers into numbers using standard Likert-scale coding so that we could analyze them properly. 
+For our project, we used a few common data-science methods that are usually applied in survey analysis. We started with simple descriptive statistics to get a first idea of the patterns in the data, things like averages, proportions, and basic comparisons between groups. We also looked at correlations to see how different variables are related, for example whether good communication or social well-being is linked to higher productivity. Since many of our questions were answered with text options (like “strongly agree”), we converted these answers into numbers using standard Likert-scale coding so that we could analyze them properly.
 
 On the technical side, we followed the Python methods shown in Azizi (2025), which helped us clean the data and structure our exploratory analysis in Google Colab. We mainly used pandas for organizing and transforming the dataset (following McKinney, 2022), and matplotlib/seaborn to create the visualizations with the help of VanderPlas, 2016. These tools and references guided our process and helped us follow good data-science practices while analyzing the Remote Working Survey (2020).
 

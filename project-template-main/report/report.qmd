@@ -5,8 +5,8 @@ author:
  - Valentine Salvat
  - Thomas Blondel 
  - Elisa Rigazzio
-institute: Name of the University
-date: today
+institute: HEC Lausanne, UNIL
+date: 22/12/2025
 title-block-banner: "#0095C8" # chosen for the university of lausanne
 toc-location: right
 bibliography: references.bib
@@ -52,7 +52,7 @@ format:
 
 jupyter: python3
 abstract: |
-  This is the abstract of the report. It should be a short summary of the project, the data, the analysis and the results. It should be concise and to the point. It should not be longer than 250 words.
+  This study explores how remote work affects productivity, social well-being, and job satisfaction. Using the 2020 NSW Remote Working Survey, we applied descriptive statistics and correlation analysis to quantify attitudes toward remote work. Findings show mixed productivity outcomes: most employees report gains up to 50%, fewer others declines. Collaboration indicators remain neutral, while reduced commuting significantly increases personal and family time, supporting better work–life balance. Most respondents prefer more remote work, suggesting higher satisfaction overall. Limitations include self-reported data and cross-sectional design. Results indicate organizations should maintain flexible work arrangements and support social engagement strategies.
 execute: 
   warning: false
   # Note: echo setting is controlled per-format above (HTML, PDF, DOCX)

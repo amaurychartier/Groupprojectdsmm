@@ -1,45 +1,60 @@
 # Data
 
 ## Sources
-The dataset used in this project is the 2020 Remote Working Survey, part of the NSW Remote Working Survey series, publicly available through the New South Wales Government’s Open Data Portal. “Data source: Remote working survey 2020””
-The 2020 survey was conducted during August and September 2020 and aimed to understand workers experiences and attitudes toward remote and hybrid working following the first phase of the COVID-19 pandemic to study the impact of remote work on professional and personal well-being.
+
+The dataset used in this project is the 2020 Remote Working Survey, part of the NSW Remote Working Survey series, publicly available through the New South Wales Government’s Open Data Portal. “Data source: [Remote working survey 2020](https://data.nsw.gov.au/data/dataset/nsw-remote-working-survey)” The 2020 survey was conducted during August and September 2020 and aimed to understand workers experiences and attitudes toward remote and hybrid working following the first phase of the COVID-19 pandemic to study the impact of remote work on professional and personal well-being.
 
 To be eligible, respondents had to:
-- be employed NSW residents
-- have experience of remote working in their current job. After excluding unemployed individuals and those whose occupations 
-cannot be performed remotely (dentists, cashiers, cleaners), the sample represents approximately 59% of NSW workers.
+
+-   be employed NSW residents
+
+-   have experience of remote working in their current job. After excluding unemployed individuals and those whose occupations cannot be performed remotely (dentists, cashiers, cleaners), the sample represents approximately 59% of NSW workers.
 
 This dataset is the 2020 wave of the survey. A second wave was collected in March and April 2021. For the present analysis, only the 2020 dataset is being processed and explored. Once the analysis of this wave is finalized, it will be possible to extend the project by including and comparing the 2021 dataset to identify how remote work patterns evolved over time.
 
 ## Description
+
 The cleaned 2020 NSW Remote Working Survey dataset contains four main types of variables: categorical, ordinal, numeric, and binary.
-- The categorical variables describe qualitative characteristics of respondents and their employment context, such as Industry, Job_type, Organisation_Size, Household, and Years_in_job. These variables are stored as text and provide context for grouping and comparison across sectors or demographic profiles.
-- The ordinal variables represent ordered responses on Likert scales, reflecting opinions and perceptions about remote working. Variables such as Org_encouraged_remote_last_year, Collaboration_remote_last_year, Org_encouraged_remote_3_months, and Collaboration_remote_3_months are encoded numerically from 1 (“Strongly disagree”) to 5 (“Strongly agree”), allowing for quantitative analysis of attitudes.
-- The numeric variables capture measurable quantities including time allocation, remote work proportions, and productivity. Examples include Age, Remote_pct_last_year, Preferred_remote_last_year, Productivity_remote_vs_workplace, and several variables representing hours spent on commuting, working, and personal or domestic activities. These are stored as integers or floats, making them suitable for descriptive statistics and correlation analysis.
-- The binary variables (Gender, Managing_position) indicate Male/Femal or Yes/No conditions, encoded as 0 and 1. These variables enable comparisons between distinct groups.
+
+-   The categorical variables describe qualitative characteristics of respondents and their employment context, such as Industry, Job_type, Organisation_Size, Household, and Years_in_job. These variables are stored as text and provide context for grouping and comparison across sectors or demographic profiles.
+
+-   The ordinal variables represent ordered responses on Likert scales, reflecting opinions and perceptions about remote working. Variables such as Org_encouraged_remote_last_year, Collaboration_remote_last_year, Org_encouraged_remote_3_months, and Collaboration_remote_3_months are encoded numerically from 1 (“Strongly disagree”) to 5 (“Strongly agree”), allowing for quantitative analysis of attitudes.
+
+-   The numeric variables capture measurable quantities including time allocation, remote work proportions, and productivity. Examples include Age, Remote_pct_last_year, Preferred_remote_last_year, Productivity_remote_vs_workplace, and several variables representing hours spent on commuting, working, and personal or domestic activities. These are stored as integers or floats, making them suitable for descriptive statistics and correlation analysis.
+
+-   The binary variables (Gender, Managing_position) indicate Male/Femal or Yes/No conditions, encoded as 0 and 1. These variables enable comparisons between distinct groups.
 
 The dataset also contains several important pieces of metadata that ensure its quality and usability for analysis. Each observation is identified by a unique respondent code (Response_ID), which guarantees traceability and prevents duplication during data processing.
 
 In addition, all variable names were standardized to concise, descriptive identifiers (Org_encouraged_remote_last_year) to make the variables easier to read, reuse, and analyze in statistical software. This naming convention makes the analysis process simpler and clearer throughout the project.
 
-::: {.callout-note}
+::: callout-note
 ## Dataset Overview Template
 
-Provide a clear summary:
+-   **File used:** 2020_rws-updated.csv
 
-- **File used:** 2020_rws-updated.csv
-- **Format: CSV (comma-separated values)
-- **Encoding: latin-1 (ISO-8859-1) (Remark: when loading the dataset in Python (Google Colab), attempting to read with utf-8 caused a UnicodeDecodeError due to typographic apostrophes and special characters. The correct parameter encoding latin1 was required to successfully load the data.)
-- **Memory usage:** approximately 7.46 MB
-- **Number of observations:** 1507 respondents (1370 rows after cleaning)
-- **Number of variables:** 73 columns (25 after cleaning)
-- **Time period:** August and September 2020
-- **Geographic coverage:** New South Wales, Australia
-- **Key variables:** Gender, Age, Job_type, Organisation_Size, Managing_position, Remote_pct_last_year, Preferred_remote_last_year, Org_encouraged_remote_last_year, Collaboration_remote_last_year, Productivity_remote_vs_workplace
+-   **Format:** CSV (comma-separated values)
 
+-   **Encoding:** latin-1 (ISO-8859-1) (Remark: when loading the dataset in Python (Google Colab), attempting to read with utf-8 caused a UnicodeDecodeError due to typographic apostrophes and special characters. The correct parameter encoding latin1 was required to successfully load the data.)
+
+-   **Memory usage:** approximately 7.46 MB
+
+-   **Number of observations:** 1507 respondents (1370 rows after cleaning)
+
+-   **Number of variables:** 73 columns (25 after cleaning)
+
+-   **Time period:** August and September 2020
+
+-   **Geographic coverage:** New South Wales, Australia
+
+-   **Key variables:** Gender, Age, Job_type, Organisation_Size, Managing_position, Remote_pct_last_year, Preferred_remote_last_year, Org_encouraged_remote_last_year, Collaboration_remote_last_year, Productivity_remote_vs_workplace
 :::
 
 ## Loading Data
+
+Following best practices, the file is loaded using a relative path via project_root, ensuring that the document remains fully reproducible regardless of the execution location. Because the original file contained specific typographic characters that caused decoding issues during import, the dataset is read using the latin-1 encoding.
+
+After loading the file, several checks were performed to confirm correct import: verification of the dataset dimensions, inspection of column names and data types (df.info()), preview of the first rows to ensure values were properly formatted. These steps guarantee that the dataset is correctly imported and ready for subsequent exploratory analysis.
 
 ```{python}
 #| label: load-data
@@ -62,7 +77,6 @@ df = pd.read_csv(url, encoding="ISO-8859-1")
 
 # Basic data inspection
 print(f"Dataset shape: {df.shape[0]} rows × {df.shape[1]} columns")
-print(f"\nColumn names: {list(df.columns)}")
 print(f"\nData types:\n{df.dtypes}")
 
 # Display first few rows
@@ -70,54 +84,65 @@ print("\nFirst 5 rows:")
 display(df.head())
 ```
 
-
 ## Wrangling
 
 ### General Transformations
-Document the data preprocessing steps taken, including cleaning, transformation, and any merging of datasets.
 
-::: {.callout-caution}
-## Document Your Transformations
+Several preprocessing and wrangling steps were performed to prepare the dataset for analysis. Before detailing each transformation.
 
-Every transformation should be:
+All preprocessing steps described below are fully reproducible and validated. Each transformation relies on deterministic Python operations (such as replace(), rename(), astype(), or simple arithmetic), meaning that re-running the same code on the raw dataset will always produce identical results. After every transformation, checks such as head(), value_counts(), or describe() were used to validate that the modifications were correctly applied and that the resulting values were coherent (age ranges, Likert scales, or percentage conversions).
 
-1. **Justified**: Explain why it's needed
-2. **Documented**: Clear code comments
-3. **Reproducible**: Can be run from scratch
-4. **Validated**: Check the results make sense
-:::
+**Variable Duplicated**
+
+Before any transformation, it is essential to verify that each observation in the dataset is unique. Duplicate rows can bias the analysis by over representing certain respondents or records. Identifying and removing them ensures data integrity.
+
+```{python}
+#| label: load-data
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+# delete all the duplicated rows
+df[df.duplicated(keep=False)]
+
+# delete all the columns with think are not significant to lower the size of the dataset for better readibility
+cols_to_drop = [0,4, 6, 11, 14, 15, 16, 18, 22, 23, 24, 26, 28, 29, 30, 31] + list(range(41, 73))
+df = df.drop(df.columns[cols_to_drop], axis=1)
+
+```
 
 ### Spotting Mistakes and Missing Data
+
 Discuss any identified mistakes or issues with missing data and describe your approach to handling them.
 
-::: {.callout-warning}
+::: callout-warning
 ## Missing Data Strategies
 
 Different approaches for different situations:
 
-- **Deletion**: Remove rows/columns with missing values (when few missing)
-- **Imputation**: Fill with mean, median, mode, or advanced methods
-- **Flagging**: Create indicator variables for missingness
-- **Model-based**: Use algorithms that handle missing values
+-   **Deletion**: Remove rows/columns with missing values (when few missing)
+-   **Imputation**: Fill with mean, median, mode, or advanced methods
+-   **Flagging**: Create indicator variables for missingness
+-   **Model-based**: Use algorithms that handle missing values
 
 **Document your choice** and justify why it's appropriate for your data!
 :::
 
 ### Listing Anomalies and Outliers
+
 Identify any anomalies or outliers discovered, along with your approach to assessing their impact.
 
-::: {.callout-tip}
+::: callout-tip
 ## Outlier Detection Methods
 
-- **Visual inspection**: Box plots, scatter plots
-- **Statistical methods**: Z-scores, IQR method
-- **Domain knowledge**: What values are impossible or implausible?
+-   **Visual inspection**: Box plots, scatter plots
+-   **Statistical methods**: Z-scores, IQR method
+-   **Domain knowledge**: What values are impossible or implausible?
 
 Remember: Not all outliers should be removed! They might be:
 
-- **Errors**: Data entry mistakes (should be corrected/removed)
-- **Valid extremes**: Real but unusual observations (should be kept)
-- **Key insights**: The most interesting part of your data!
+-   **Errors**: Data entry mistakes (should be corrected/removed)
+-   **Valid extremes**: Real but unusual observations (should be kept)
+-   **Key insights**: The most interesting part of your data!
 :::
 
 ```{python}
@@ -174,44 +199,44 @@ data_clean.to_csv(processed_path, index=False)
 
 After cleaning, our dataset contains **`{python} data_clean.shape[0]` observations** across **`{python} data_clean.shape[1]` variables**. We removed **`{python} data.shape[0] - data_clean.shape[0]` rows** due to missing values in critical variables.
 
-::: {.callout-tip}
+::: callout-tip
 ## Inline Code for Dynamic Results
 
 Notice the inline code in the paragraph above uses Python expressions wrapped in backticks with `{python}` prefix to insert computed values directly into your text. This ensures your narrative automatically updates when data changes.
 
 **Working examples in this document:**
 
-- The mean performance score is `{python} f'{data_clean["performance"].mean():.3f}'`
-- We analyzed data from `{python} data_clean['instructor'].nunique()` different instructors
+-   The mean performance score is `{python} f'{data_clean["performance"].mean():.3f}'`
+-   We analyzed data from `{python} data_clean['instructor'].nunique()` different instructors
 
 **To use inline code:** Write your Python expression between backticks with the {python} prefix, like this (without the backslashes): `\{python\} your_expression_here`
 
 This is better than hard-coding numbers, which can become outdated if you update your data!
 :::
 
-::: {.callout-important}
+::: callout-important
 ## Don't Forget to Interpret!
 
 After showing your data cleaning code, **explain your decisions**:
 
-- **Why** did you remove certain rows or handle missing values this way?
-- **What** impact do these choices have on your analysis?
-- **How** do your cleaning decisions align with your research questions?
+-   **Why** did you remove certain rows or handle missing values this way?
+-   **What** impact do these choices have on your analysis?
+-   **How** do your cleaning decisions align with your research questions?
 
 Example: "We removed rows with missing performance scores (N=15, 7.5% of data) because these are our primary outcome variable and cannot be reliably imputed. This minimal data loss is acceptable and preserves the integrity of our performance analysis."
 :::
 
-::: {.callout-note}
+::: callout-note
 ## Data Cleaning Checklist
 
 Before moving to analysis, verify:
 
-- ✓ All column names are clean and consistent
-- ✓ Data types are appropriate for each variable
-- ✓ Missing values are identified and handled
-- ✓ Outliers are investigated and documented
-- ✓ Categorical variables are properly encoded
-- ✓ Duplicate rows are checked and removed if needed
-- ✓ Date/time variables are in proper format
-- ✓ Cleaned data is saved for reproducibility
+-   [x] All column names are clean and consistent
+-   [x] Data types are appropriate for each variable
+-   [x] Missing values are identified and handled
+-   [x] Outliers are investigated and documented
+-   [x] Categorical variables are properly encoded
+-   [x] Duplicate rows are checked and removed if needed
+-   [x] Date/time variables are in proper format
+-   [x] Cleaned data is saved for reproducibility
 :::
