@@ -58,59 +58,6 @@ execute:
   # Note: echo setting is controlled per-format above (HTML, PDF, DOCX)
 ---
 
-::: {.callout-important}
-## Interpretation > Visualization
-
-**Plots alone won't earn you a good grade.** What matters most is **interpreting your findings**.
-
-For every result you present:
-
-- **Explain** what the data shows
-- **Interpret** what it means for your research questions
-- **Discuss** implications and connect to domain knowledge
-
-Quality of insight > Quantity of plots. Your instructors can read plots—show them you *understand* what the data reveals.
-:::
-
-## Quarto Guide (Remove After) {.unnumbered}
-
-::: {.callout-tip}
-## Two Report Writing Options
-
-**Option 1 - Modular (Recommended for Teams):**
-
-- Each section in a separate `.qmd` file in `report/sections/`
-- Files prefixed with `_` (e.g., `_introduction.qmd`) are auto-included
-- Better for collaboration (fewer merge conflicts)
-- Render `report.qmd` to build the complete report
-
-**Option 2 - Single File:**
-
-- Write everything in `report.qmd`
-- Simpler but harder to collaborate
-- Delete `report/sections/` folder if using this approach
-
-See [Quarto includes documentation](https://quarto.org/docs/authoring/includes) for details.
-:::
-
-::: {.callout-tip}
-## What Are Code Chunks?
-
-**Code chunks** are blocks of executable code embedded in your Quarto document. They run when you render and include their output (plots, tables, results) in your report.
-
-**Basic Syntax:**
-
-- Start with three backticks followed by the language: ` ```python`
-- Write your code
-- End with three backticks: ` ``` `
-
-**Example:**
-
-```python
-import pandas as pd
-data = pd.DataFrame({'x': [1, 2, 3], 'y': [4, 5, 6]})
-print(data)
-```
 
 **Chunk Options** (use `#| option: value` at the top):
 
@@ -121,56 +68,13 @@ print(data)
 - `#| fig-cap: "My Plot"` - Add figure caption
 - `#| label: fig-myplot` - Label for cross-referencing
 
-**Inline Code:** Use single backticks with `{python}` to insert values in text: `` `{python} 2 + 2` `` → `{python} 2 + 2`
-
-See [Quarto code cells documentation](https://quarto.org/docs/computations/execution-options.html) for all options.
-:::
-
-::: {.callout-note}
-## Interactive Plots in PDF
-
-Interactive plots/tables only work in HTML output. If using interactive elements, render to HTML only (comment out the `pdf:` format option).
-:::
-
-::: {.callout-tip}
-## Code Visibility by Format
-
-The YAML header controls code display:
-
-- **HTML**: Code is collapsible (readers can show/hide)
-- **PDF/DOCX**: Code is hidden (only results shown)
-
-**Override for specific chunks:**
-
-```python
-#| echo: true   # Show in all formats
-#| echo: false  # Hide in all formats
-```
-:::
-
-::: {.callout-tip}
-## Writing Math Equations
-
-Use LaTeX syntax for mathematical notation:
-
-**Inline:** `$\bar{x} = \frac{1}{n}\sum_{i=1}^{n}x_i$` → $\bar{x} = \frac{1}{n}\sum_{i=1}^{n}x_i$
-
-**Display:** Use `$$...$$` for separate lines:
-$$
-S(t) = P(T > t) = 1 - F(t)
-$$
-
-**Numbered (for referencing):**
-$$
-\text{Loss Ratio} = \frac{\text{Incurred Losses}}{\text{Earned Premium}}
-$$ {#eq-loss-ratio}
 
 Reference with `@eq-loss-ratio` → @eq-loss-ratio
 
 **Common symbols:** $\alpha$, $\beta$, $\sigma$, $\mu$, $\sum_{i=1}^{n}$, $\int_a^b f(x)dx$, $E[X]$, $\text{Var}(X)$
 
 More at [LaTeX Math Symbols](https://en.wikibooks.org/wiki/LaTeX/Mathematics).
-:::
+
 
 ::: {.callout-tip}
 ## Cross-Referencing Sections, Figures, Tables, and Equations
@@ -200,12 +104,6 @@ Reference with: @fig-correlation
 Reference with: @tbl-summary
 ```
 
-**Equations:**
-```markdown
-$$ y = mx + b $$ {#eq-linear}
-
-Reference with: @eq-linear
-```
 
 **Working examples in this template:**
 
@@ -522,9 +420,6 @@ Or in the chunk options (only for formats without explicit `figsize`):
 ::: {#refs}
 :::
 
-# Appendices {.unnumbered}
-
-::: {.callout-note}
 ## What Goes in Appendices?
 
 **Appendices = supplementary material** that supports but isn't essential to your main story.
@@ -539,17 +434,6 @@ Or in the chunk options (only for formats without explicit `figsize`):
 - **Technical details** about data processing steps
 - **Sensitivity analyses** or robustness checks
 - **Data dictionaries** with detailed variable descriptions
-
-**What to Keep in Main Report:**
-
-- **Key visualizations** that directly answer your research questions
-- **Essential plots** for understanding your methodology
-- **Critical results** that support your conclusions
-- **Main findings** that tell your data story
-
-**Remember:** Main report should be self-contained. Reference appendices when needed: "See @sec-appendix-plots for additional plots."
-:::
-
 
 ### Appendix A: Additional Exploratory Plots {#sec-appendix-plots}
 
