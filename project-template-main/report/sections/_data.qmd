@@ -96,8 +96,7 @@ All preprocessing steps described below are fully reproducible and validated. Ea
 
 Before any transformation, it is essential to verify that each observation in the dataset is unique. Duplicate rows can bias the analysis by over representing certain respondents or records. Identifying and removing them ensures data integrity.
 
-This operation can be rerun on the raw dataset at any stage of the workflow, guaranteeing consistent detection of duplicated records.
-The command returned an empty DataFrame, confirming that no duplicate rows were present. Therefore, no observations were removed in this step.
+This operation can be rerun on the raw dataset at any stage of the workflow, guaranteeing consistent detection of duplicated records. The command returned an empty DataFrame, confirming that no duplicate rows were present. Therefore, no observations were removed in this step.
 
 ```{python}
 #| label: drop column
@@ -243,7 +242,6 @@ For example: 80 becomes 0.80 50 becomes 0.50 0 becomes 0.00
 
 This final step creates clean numerical variables that can be easily averaged, compared, or visualised in the analysis.
 
-
 ```{python}
 #| label: Variables Working Remotely
 # Code visibility controlled by format settings in report.qmd
@@ -298,134 +296,72 @@ def parse_productivity(val):
 df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].apply(parse_productivity)
 ```
 
-
 ### Spotting Mistakes and Missing Data
 
-Discuss any identified mistakes or issues with missing data and describe your approach to handling them.
+Before conducting the analysis, the dataset was reviewed to identify missing values, inconsistencies, and unusually small categories. This ensures that only reliable and interpretable data are used in the following steps.
 
-::: callout-warning
-## Missing Data Strategies
+**Identified missing data**
 
-Different approaches for different situations:
+-   Most variables contained very few missing values, mainly in attitudinal questions where some respondents simply did not answer.
 
--   **Deletion**: Remove rows/columns with missing values (when few missing)
--   **Imputation**: Fill with mean, median, mode, or advanced methods
--   **Flagging**: Create indicator variables for missingness
--   **Model-based**: Use algorithms that handle missing values
+-   Additional missingness appeared when converting textual inputs (percentages or productivity statements) into numeric formats, entries that could not be parsed were intentionally converted to NaN.
 
-**Document your choice** and justify why it's appropriate for your data!
-:::
+-   The inspection of category sizes showed that some groups were extremely small, such as the “Rather not say” gender category (2 respondents), which was removed because it cannot support meaningful analysis.
+
+**Approach to handling missing data**
+
+-   Deletion was applied when missingness or category size was extremely small and analytically useless.
+
+-   Imputation with a neutral value (3 = Neither agree nor disagree) was used for missing Likert-scale answers to preserve observations without creating bias.
+
+-   Conversion to numeric with errors=“coerce” was used for percentage and productivity variables, producing valid NaN values when entries could not be interpreted.
+
+Because missingness was limited and mostly isolated to subjective questions, more complex methods were not necessary.
+
+**Future handling of small or irrelevant categories**
+
+-   If additional categories, during the analysis progress, are found to be too small to contribute meaningfully, they will be removed, flagged, or when conceptually appropriate grouped together with similar categories to preserve statistical power.
+
+**Future variable selection**
+
+-   Some variables will ultimately explain the effects of remote work on health, productivity, or work life balance better than others. Variables that show no meaningful correlation or explanatory power in later stages of the project will also be removed to keep the analysis focused, interpretable, and relevant.
 
 ### Listing Anomalies and Outliers
 
-Identify any anomalies or outliers discovered, along with your approach to assessing their impact.
+A detailed inspection of the numeric variables, using both summary statistics and histogram visualisations, revealed several anomalies and potential outliers in the dataset.
 
-::: callout-tip
-## Outlier Detection Methods
+**Detected anomalies**
 
--   **Visual inspection**: Box plots, scatter plots
--   **Statistical methods**: Z-scores, IQR method
--   **Domain knowledge**: What values are impossible or implausible?
+-   Age variable: Two respondents appear with an age of 120 years, which is biologically impossible and indicates a clear data entry error. This type of anomaly commonly occurs when the birth year is mistyped—for example, entering 1900 instead of 2000, or 2005 instead of 1920—which produces unrealistic age values. These observations will therefore be removed, while other extreme but plausible ages (such as 75 or 83) are retained at this stage. The minimum value (19) is plausible for entry-level workers.
 
-Remember: Not all outliers should be removed! They might be:
+-   Domestic_hours_workplace: A single observation of –1 hour is impossible and indicates a recording error.
 
--   **Errors**: Data entry mistakes (should be corrected/removed)
--   **Valid extremes**: Real but unusual observations (should be kept)
--   **Key insights**: The most interesting part of your data!
-:::
+-   Working and commuting time variables: Extremely high records were observed, such as 23 hours of work in a day or 10–12 hours of commuting.
 
-```{python}
-#| label: data-cleaning
-# Code visibility controlled by format settings in report.qmd
-#| output: true
+While unlikely, these may represent exceptional cases (long-distance travel, extended shifts). They are retained unless later analysis shows they distort results.
 
-"""Example of data cleaning with pandas - proper transformations."""
+-   Commute_hours_remote: Values up to 12 hours on remote days are implausible and likely due to misinterpretation or input mistakes.
 
-import pandas as pd
-import numpy as np
-from IPython.display import display
-from quarto_runtime import project_root
+-   Productivity variable: Extreme values (+50%, –50%) appear in the data but remain plausible since the question explicitly asked respondents to report percentage differences.
 
-# Load raw data using the same approach as above
-raw_data = project_root / "data" / "raw" / "data_raw.csv"
-data = pd.read_csv(raw_data, skipinitialspace=True)
+**Approach to handling outliers**
 
-# Clean column names (lowercase, remove spaces)
-data.columns = data.columns.str.strip().str.lower()
+-   Outliers were evaluated using:
 
-# Check for missing values
-print("Missing values per column:")
-print(data.isnull().sum())
+    -   Visual inspection (histograms from univariate EDA)
 
-# Data cleaning pipeline
-data_clean = (
-    data
-    # Remove rows with critical missing values
-    .dropna(subset=["behavior", "performance"])
-    # Convert categorical variables
-    .assign(
-        behavior=lambda df: df["behavior"].astype("category"),
-        instructor=lambda df: df["instructor"].astype("category"),
-    )
-    # Ensure numeric columns are proper type
-    .assign(
-        performance=lambda df: pd.to_numeric(df["performance"], errors='coerce')
-    )
-)
+    -   Summary statistics (min/max, interquartile ranges)
 
-print(f"\nOriginal data shape: {data.shape}")
-print(f"Cleaned data shape: {data_clean.shape}")
-print(f"Rows removed: {data.shape[0] - data_clean.shape[0]}")
+    -   Domain knowledge (negative hours, impossible ages)
 
-# Display cleaned data summary
-print("\nCleaned data summary:")
-display(data_clean.describe(include='all'))
+-   Following best practices
 
-# Save cleaned data for later use (using project_root path)
-processed_path = project_root / "data" / "processed" / "data_processed.csv"
-data_clean.to_csv(processed_path, index=False)
-```
+    -   Impossible values (age = 120, domestic hours = –1) will be removed before modelling.
 
-After cleaning, our dataset contains **`{python} data_clean.shape[0]` observations** across **`{python} data_clean.shape[1]` variables**. We removed **`{python} data.shape[0] - data_clean.shape[0]` rows** due to missing values in critical variables.
+    -   Extreme but plausible behaviours (very long workdays) are kept unless they later bias model results.
 
-::: callout-tip
-## Inline Code for Dynamic Results
+    -   Additional outliers identified during the analysis phase may be removed, flagged, or grouped depending on their relevance and impact.
 
-Notice the inline code in the paragraph above uses Python expressions wrapped in backticks with `{python}` prefix to insert computed values directly into your text. This ensures your narrative automatically updates when data changes.
+Outliers are not always errors; some reveal meaningful variability in remote work habits. The chosen approach maintains data integrity while ensuring that the analysis focuses on realistic, interpretable patterns.
 
-**Working examples in this document:**
-
--   The mean performance score is `{python} f'{data_clean["performance"].mean():.3f}'`
--   We analyzed data from `{python} data_clean['instructor'].nunique()` different instructors
-
-**To use inline code:** Write your Python expression between backticks with the {python} prefix, like this (without the backslashes): `\{python\} your_expression_here`
-
-This is better than hard-coding numbers, which can become outdated if you update your data!
-:::
-
-::: callout-important
-## Don't Forget to Interpret!
-
-After showing your data cleaning code, **explain your decisions**:
-
--   **Why** did you remove certain rows or handle missing values this way?
--   **What** impact do these choices have on your analysis?
--   **How** do your cleaning decisions align with your research questions?
-
-Example: "We removed rows with missing performance scores (N=15, 7.5% of data) because these are our primary outcome variable and cannot be reliably imputed. This minimal data loss is acceptable and preserves the integrity of our performance analysis."
-:::
-
-::: callout-note
-## Data Cleaning Checklist
-
-Before moving to analysis, verify:
-
--   [x] All column names are clean and consistent
--   [x] Data types are appropriate for each variable
--   [x] Missing values are identified and handled
--   [x] Outliers are investigated and documented
--   [x] Categorical variables are properly encoded
--   [x] Duplicate rows are checked and removed if needed
--   [x] Date/time variables are in proper format
--   [x] Cleaned data is saved for reproducibility
-:::
+The following EDA sections will further analyse these variables to understand their patterns and relationships.
