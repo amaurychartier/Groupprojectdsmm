@@ -97,7 +97,7 @@ All preprocessing steps described below are fully reproducible and validated. Ea
 Before any transformation, it is essential to verify that each observation in the dataset is unique. Duplicate rows can bias the analysis by over representing certain respondents or records. Identifying and removing them ensures data integrity.
 
 ```{python}
-#| label: load-data
+#| label: drop column
 # Code visibility controlled by format settings in report.qmd
 #| output: true
 
