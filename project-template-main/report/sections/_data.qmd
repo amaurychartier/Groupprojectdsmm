@@ -96,6 +96,9 @@ All preprocessing steps described below are fully reproducible and validated. Ea
 
 Before any transformation, it is essential to verify that each observation in the dataset is unique. Duplicate rows can bias the analysis by over representing certain respondents or records. Identifying and removing them ensures data integrity.
 
+This operation can be rerun on the raw dataset at any stage of the workflow, guaranteeing consistent detection of duplicated records.
+The command returned an empty DataFrame, confirming that no duplicate rows were present. Therefore, no observations were removed in this step.
+
 ```{python}
 #| label: drop column
 # Code visibility controlled by format settings in report.qmd
@@ -109,6 +112,192 @@ cols_to_drop = [0,4, 6, 11, 14, 15, 16, 18, 22, 23, 24, 26, 28, 29, 30, 31] + li
 df = df.drop(df.columns[cols_to_drop], axis=1)
 
 ```
+
+**Rename Columns**
+
+Renaming the original survey questions into shorter and clearer variable names was necessary to improve readability and make the dataset easier to work with.
+
+```{python}
+#| label: rename column
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+rename_map = {
+    "Response ID": "Response_ID",
+    "What year were you born?": "Age",
+    "What is your gender?": "Gender",
+    "Which of the following best describes your industry?": "Industry",
+    "Which of the following best describes your current occupation?": "Job_type",
+    "How many people are currently employed by your organisation?": "Organisation_Size",
+    "Do you manage people as part of your current occupation?": "Managing_position",
+    "Which of the following best describes your household?": "Household",
+    "How long have you been in your current job?": "Years_in_job",
+    "Thinking about your current job, how much of your time did you spend remote working last year?": "Remote_pct_last_year",
+    "Thinking about remote working last year, how strongly do you agree or disagree with the following statements? - My organisation encouraged people to work remotely": "Org_encouraged_remote_last_year",
+    "Thinking about remote working last year, how strongly do you agree or disagree with the following statements? - I could easily collaborate with colleagues when working remotely": "Collaboration_remote_last_year",
+    "How much of your time would you have preferred to work remotely last year?": "Preferred_remote_last_year",
+    "Thinking about your current job, how much of your time did you spend remote working in the last 3 months?": "Remote_pct_last_3_months",
+    "Thinking about remote working in the last 3 months, how strongly do you agree or disagree with the following statements? - My organisation encouraged people to work remotely": "Org_encouraged_remote_3_months",
+    "Thinking about remote working in the last 3 months, how strongly do you agree or disagree with the following statements? - I could easily collaborate with colleagues when working remotely": "Collaboration_remote_3_months",
+    "How much of your time would you have preferred to work remotely in the last 3 months?": "Preferred_remote_3_months",
+    "This question is about your productivity. Productivity means what you produce for each hour that you work. It includes the amount of work you achieve each hour, and the quality of your work each hour.  \nPlease compare your productivity when you work remotely to when you work at your employer\x92s workplace.  \nRoughly how productive are you, each hour, when you work remotely?": "Productivity_remote_vs_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Preparing for work and commuting": "Commute_hours_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Working": "Working_hours_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Personal and family time": "Personal_family_hours_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Caring and domestic responsibilities": "Domestic_hours_workplace",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Preparing for work and commuting": "Commute_hours_remote",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Working": "Working_hours_remote",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Personal and family time": "Personal_family_hours_remote",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Caring and domestic responsibilities": "Domestic_hours_remote"}
+df.rename(columns=rename_map, inplace=True)
+
+```
+
+**Standard Name Organisation Size**
+
+The Organisation_Size variable was recoded by replacing the long original text categories with shorter, standardised. To make grouping and comparison more intuitive.
+
+```{python}
+#| label: standard name
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+df["Organisation_Size"] = df["Organisation_Size"].replace({
+    "I am the only employee": "Solo business",
+    "Between 1 and 4": "Micro enterprise",
+    "Between 5 and 19": "Small enterprise",
+    "Between 20 and 199": "Medium enterprise",
+    "More than 200": "Large / Corporate enterprise"}).fillna("Other / Unspecified")
+```
+
+**Binary Variables**
+
+The variables Gender and Managing_position, the original text responses were converted into binary categories to make them suitable for statistical analysis and group comparisons. Respondents who selected “Rather not say” for gender were removed, as this category represented only two individuals and could not form a meaningful subgroup. Gender was then encoded as 0 = Male and 1 = Female, while Managing_position was encoded as 0 = No and 1 = Yes, indicating whether the respondent supervises others. This transformation produces clean, consistent, and analysis-ready binary variables that can be easily used in descriptive statistics, visualisations, and modelling.
+
+```{python}
+#| label: binary variable
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+df = df[df["Gender"] != "Rather not say"]
+df["Gender"] = df["Gender"].replace({"Male": 0, "Female": 1}).astype("category")
+df["Managing_position"] = df["Managing_position"].replace({"No": 0, "Yes": 1}).astype("category")
+df = df.dropna(subset=["Managing_position"])
+```
+
+**Variable Ages**
+
+The variable Age, the dataset originally reported the respondent’s year of birth. This information was converted into a more interpretable age variable by subtracting the birth year from 2020, the year the survey was conducted. For example, a respondent born in 1985 becomes 2020 − 1985 = 35 years old. Expressing this information directly as age is more intuitive and easier to interpret in descriptive statistics, comparisons, and visualizations.
+
+```{python}
+#| label: Variable Ages
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+df["Age"] = 2020 - df["Age"]
+```
+
+**Variable Years in Job**
+
+The variable Years_in_job, the original responses were long text categories describing tenure intervals. These were simplified into shorter and more readable labels: “5+”, “5-”, and “1-”. This transformation keeps the original meaning while making the variable easier to interpret, compare, and visualise in tables and plots.
+
+```{python}
+#| label: Variable years in job
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+df["Years_in_job"] = df["Years_in_job"].replace({
+    "More than 5 years": "5+",
+    "Between 1 and 5 years": "5-",
+    "Between 6 and 12 months": "1-"})
+```
+
+**Variable Likert Scale Mapping**
+
+The Likert-scale variables, this transformation allows these subjective perceptions to be analysed quantitatively. The four variables related to organisational support and collaboration were mapped using this scale. Any missing responses were replaced with the neutral value 3, corresponding to “Neither agree nor disagree”, to keep these observations in the dataset while avoiding bias from missing attitudes.
+
+```{python}
+#| label: Variable Likert Scale Mapping
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+likert_mapping = {
+    "Strongly disagree": 1,
+    "Somewhat disagree": 2,
+    "Neither agree nor disagree": 3,
+    "Somewhat agree": 4,
+    "Strongly agree": 5}
+likert_cols = [
+    "Org_encouraged_remote_last_year",
+    "Collaboration_remote_last_year",
+    "Org_encouraged_remote_3_months",
+    "Collaboration_remote_3_months"]
+df[likert_cols] = df[likert_cols].replace(likert_mapping).fillna(3)
+```
+
+**Variables Working Remotely**
+
+The variables describing the percentage of time spent or preferred working remotely, the original responses (“Less than 10% of my time”…“100% - All of my time”). These were first converted into numeric percentage values using a mapping dictionary. All four percentage-related variables were processed in the same way. Before applying the mapping, non-breaking spaces () and extra whitespace were removed from the strings to avoid parsing issues. After the text values were mapped to numeric percentages (“80%” → 80), the values were converted into proportions between 0 and 1 by dividing by 100.
+
+For example: 80 becomes 0.80 50 becomes 0.50 0 becomes 0.00
+
+This final step creates clean numerical variables that can be easily averaged, compared, or visualised in the analysis.
+
+
+```{python}
+#| label: Variables Working Remotely
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+remote_mapping = {
+    "Rarely or never": 0,
+    "Less than 10% of my time": 5,
+    "10%": 10,
+    "20%": 20,
+    "30%": 30,
+    "40%": 40,
+    "50% - About half of my time": 50,
+    "50% - I spent about half of my time remote working": 50,
+    "60%": 60,
+    "70%": 70,
+    "80%": 80,
+    "90%": 90,
+    "100% - All of my time": 100,
+    "100% - I spent all of my time remote working": 100,
+    "I would not have preferred to work remotely": 0}
+percent_cols = [
+    "Preferred_remote_last_year",
+    "Remote_pct_last_year",
+    "Remote_pct_last_3_months",
+    "Preferred_remote_3_months"]
+for col in percent_cols:
+    df[col] = df[col].astype(str).str.replace("\xa0", "", regex=True).str.strip().replace(remote_mapping)
+    df[col] = pd.to_numeric(df[col], errors="coerce") / 100
+```
+
+**Variables Productivity Cleaning**
+
+The variable Productivity_remote_vs_workplace, the survey responses (I’m 20% more productive when I work remotely” or “I’m 10% less productive”). These text responses were converted into clean numeric values using a custom parsing function. The mapping works as follows: Statements indicating more productive remotely return a positive percentage (“20% more productive” → +20). Statements indicating less productive remotely return a negative percentage (“10% less productive” → –10). Statements indicating no difference return 0. This transformation results in a numeric scale where positive values mean higher productivity when working remotely, negative values reflect lower productivity, and zero indicates no change. This allows the variable to be analysed quantitatively, averaged across groups, or used in visualisations.
+
+```{python}
+#| label: Variables Productivity Cleaning
+# Code visibility controlled by format settings in report.qmd
+#| output: true
+
+def parse_productivity(val):
+    if pd.isna(val):
+        return None
+    val = str(val).replace("\x92", "'")  # Fix apostrophe
+    if "more productive" in val:
+        return int(val.split("%")[0].replace("I'm ", "").strip())
+    elif "less productive" in val:
+        return -int(val.split("%")[0].replace("I'm ", "").strip())
+    elif "same" in val:
+        return 0
+    return None
+df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].apply(parse_productivity)
+```
+
 
 ### Spotting Mistakes and Missing Data
 
