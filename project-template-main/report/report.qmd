@@ -417,8 +417,7 @@ Or in the chunk options (only for formats without explicit `figsize`):
 
 # References {.unnumbered}
 
-::: {#refs}
-:::
+{{< include references.bib >}}
 
 ## What Goes in Appendices?
 
