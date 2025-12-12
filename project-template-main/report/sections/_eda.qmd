@@ -14,6 +14,9 @@ import seaborn as sns
 import plotly as py
 import plotly.graph_objs as go
 import statistics
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.express as px
 
 url = "https://data.nsw.gov.au/data/dataset/4ff1a0de-9bff-4b45-9f93-5a9bf44df257/resource/5b843384-5aea-4bc4-9935-0dd91ea2559d/download/2020_rws-updated.csv"
 df = pd.read_csv(url, encoding="ISO-8859-1")
@@ -135,37 +138,29 @@ df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].
 From this code we got the full results of all our variables in terms of distribution sorted by occurrence. The relevant information we gathered from these are the followings:
 
 ```{python}
-# Code visibility controlled by format settings in report.qmd
-
-    print("\n--- Age ---")
-    print(df["Age"].value_counts(dropna=False))
+print("\n--- Age ---")
+print(df["Age"].value_counts(dropna=False))
 ```
 
 -   Age: we have some outliers for the age variable with 2 people 120 years old that needs to be treated
 
 ```{python}
-# Code visibility controlled by format settings in report.qmd
-
-    print("\n--- Gender ---")
-    print(df["Gender"].value_counts(dropna=False))
+print("\n--- Gender ---")
+print(df["Gender"].value_counts(dropna=False))
 ```
 
 -   Gender: good balance (604 / (604+766) = 44% of women)
 
 ```{python}
-# Code visibility controlled by format settings in report.qmd
-
-    print("\n--- Years_in_job ---")
-    print(df["Years_in_job"].value_counts(dropna=False))
+print("\n--- Years_in_job ---")
+print(df["Years_in_job"].value_counts(dropna=False))
 ```
 
 -   Years in job: sample is quite experienced with only 11% with less than 1 year of experience.
 
 ```{python}
-# Code visibility controlled by format settings in report.qmd
-
-    print("\n--- Productivity_remote_vs_workplace ---")
-    print(df["Productivity_remote_vs_workplace"].value_counts(dropna=False))
+print("\n--- Productivity_remote_vs_workplace ---")
+print(df["Productivity_remote_vs_workplace"].value_counts(dropna=False))
 ```
 
 - Productivity remote vs workplace: we can see that for most of them productivity is either equivalent, or they even gained in productivity (46% gained between 20 to 50% of productivity).
@@ -175,83 +170,120 @@ From this code we got the full results of all our variables in terms of distribu
 Concretely, if we look at the distribution of the change in productivity with this code :  
 
 ```{python}
-# Code visibility controlled by format settings in report.qmd
-# Violin Plot: Productivity by Organisation Size 
-plt.figure(figsize=(8,4)) 
-sns.violinplot(x=df['Organisation_Size'], y=df['Productivity_remote_vs_workplace']) 
-plt.title('Productivity Change by Organisation Size') 
-plt.xlabel('Organisation Size') 
-plt.ylabel('Productivity Change (%)') 
-plt.show() 
+fig = px.histogram(df, x='Productivity_remote_vs_workplace', nbins=30, title="Histogramme de la productivité")
+fig.show()
 
+print("Skewness change in productivity:")
+print(df['Productivity_remote_vs_workplace'].skew())
 ```
 
-In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated. 
-
-
+The histogram we obtain from the code shows an important part of 0 meaning for a lot of people working remotely doesn’t affect their productivity. Looking at the skewness (-0.13), we can deduce that data is significantly more on the right of the graph, meaning that people are more productive being at home for work.  
 
 ## Bivariate Analysis
 
-Explore relationships between two variables.
-
-Our univariate analysis in @fig-performance-dist revealed that performance scores follow an approximately normal distribution with a mean of 0.90. The box plot (@fig-performance-box) confirmed this finding and helped identify a few outliers at the lower end of the distribution.
-
-::: callout-tip
-## How to Reference Figures
-
-Use `@fig-label` syntax to reference figures in your text. Quarto automatically numbers them and creates clickable links.
-
-**Examples with figures in this template:**
-
--   `@fig-performance-dist` → See @fig-performance-dist for details
--   `@fig-correlation-matrix` → As shown in @fig-correlation-matrix
--   `@tbl-anova-test` → The ANOVA results in @tbl-anova-test
-
-**Why reference figures?**
-
-1.  Automatic numbering (updates if you reorder)
-2.  Clickable links in HTML output
-3.  Professional academic writing standard
-4.  Helps readers find the relevant visualization
-
-**Example usage in text:**
-
-"The distribution shown in @fig-performance-dist indicates..."
-
-"As seen in @fig-correlation-matrix, there is a strong positive correlation..."
-:::
-
-Now let's examine how performance varies across different instructors.
-
-::: panel-tabset
-## Grouped Comparison
-
 ```{python}
-#| label: fig-performance-by-instructor
-#| fig-cap: "Performance scores grouped by instructor showing variation across instructors"
-# Code visibility controlled by format settings in report.qmd
+# Violin Plot: Productivity by Organisation Size 
+fig = px.violin(
+    df,
+    x="Organisation_Size",
+    y="Productivity_remote_vs_workplace",
+    box=True,        # affiche aussi le boxplot à l'intérieur
+    points="all",    # affiche les points individuels
+    title="Productivity Change by Organisation Size")
+fig.update_xaxes(title="Organisation Size")
+fig.update_yaxes(title="Productivity Change (%)")
 
-fig, ax = plt.subplots(figsize=(8, 5))
-
+fig.show()
 ```
 
-## Statistical Test
-
+In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated. 
 ```{python}
-#| label: tbl-anova-test
-#| tbl-cap: "ANOVA test results for performance differences across instructors"
-# Code visibility controlled by format settings in report.qmd
+male_df = df[df['Gender'] == 0]
+female_df = df[df['Gender'] == 1]
 
+male_counts = male_df['Managing_position'].value_counts()
+female_counts = female_df['Managing_position'].value_counts()
+
+labels = ['Managing', 'Not Managing']
+
+male_values = [male_counts.get(1, 0), male_counts.get(0, 0)]
+female_values = [female_counts.get(1, 0), female_counts.get(0, 0)]
+fig = make_subplots(
+    rows=1, cols=2,
+    specs=[[{'type': 'domain'}, {'type': 'domain'}]],
+    subplot_titles=['Managing Position (Male)', 'Managing Position (Female)'])
+
+# Pie chart Men
+fig.add_trace(
+    go.Pie(labels=labels, values=male_values, hole=0.4),
+    row=1, col=1)
+
+# Pie chart Women
+fig.add_trace(
+    go.Pie(labels=labels, values=female_values, hole=0.4),
+    row=1, col=2)
+
+fig.update_layout(
+    title="Managing Position by Gender",
+    height=500,
+    width=900)
+
+fig.show()
 ```
 
-## Scatter Plot
+We wanted to look at the distribution of the managing positions based on the gender and we could see that almost 60% of men are managers compared to only 40% for women so this is factored to take into consideration when giving conclusions.  
 
+## Correlation/Multivariate Analysis 
 ```{python}
-#| label: fig-scatter-experience-performance
-#| fig-cap: "Scatter plot showing positive relationship between experience and performance"
-# Code visibility controlled by format settings in report.qmd
+labels = ['Working', 'Personal & Family', 'Domestic', 'Commute']
 
+remote_hours = [
+    df['Working_hours_remote'].mean(),
+    df['Personal_family_hours_remote'].mean(),
+    df['Domestic_hours_remote'].mean(),
+    df['Commute_hours_remote'].mean()
+]
+
+workplace_hours = [
+    df['Working_hours_workplace'].mean(),
+    df['Personal_family_hours_workplace'].mean(),
+    df['Domestic_hours_workplace'].mean(),
+    df['Commute_hours_workplace'].mean()
+]
+
+# Pie Remote
+fig_remote = go.Figure(
+    data=[go.Pie(labels=labels, values=remote_hours, hole=0.4)]
+)
+fig_remote.update_layout(title="Distribution of Remote Hours")
+fig_remote.show()
+
+# Pie Workplace
+fig_workplace = go.Figure(
+    data=[go.Pie(labels=labels, values=workplace_hours, hole=0.4)]
+)
+fig_workplace.update_layout(title="Distribution of Workplace Hours")
+fig_workplace.show()
 ```
-:::
+
+can see on those 2 pie charts representing the distribution of the day based on the time in hours working, commuting, for personnal and family, and domestic.  We can see that the time of work is sensibly the same for remote and workplace (50% compared to 48.8%). What is important here is to see that time to commute is divided by 3 when remote working so it gives more time for domesting and personnal/family time going from 39.6% of your day to 46%. This difference shows a better work/life balance for employees when remotely working. This could affect mental health positively.  
+
+To test correlation we put the percentage of remote work with the change of productivity. 
+```{python}
+fig = px.scatter(
+    df,
+    x="Remote_pct_last_year",
+    y="Productivity_remote_vs_workplace",
+    trendline="ols",
+    title="Remote Work % vs Productivity Change (Regression)"
+)
+
+fig.update_xaxes(title="Remote Work Percentage")
+fig.update_yaxes(title="Productivity Change (%)")
+
+fig.show()
+```
+
+We can see here a positive correlation which infers that when you spend more time remotely your productivity rises. In causality it could be interpreted as a good signal.  But the coefficient is of 0.14 so a low positive correlation.  
 
 ## Key Findings
