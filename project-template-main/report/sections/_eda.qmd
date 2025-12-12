@@ -5,6 +5,133 @@
 Examine each variable individually to understand its distribution, central tendency, and spread.
 
 ```{python}
+# Code visibility controlled by format settings in report.qmd
+import pandas as pd
+import numpy as np
+import warnings
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly as py
+import plotly.graph_objs as go
+import statistics
+
+url = "https://data.nsw.gov.au/data/dataset/4ff1a0de-9bff-4b45-9f93-5a9bf44df257/resource/5b843384-5aea-4bc4-9935-0dd91ea2559d/download/2020_rws-updated.csv"
+df = pd.read_csv(url, encoding="ISO-8859-1")
+# delete all the duplicated rows
+df[df.duplicated(keep=False)]
+
+# delete all the columns with think are not significant to lower the size of the dataset for better readibility
+cols_to_drop = [0,4, 6, 11, 14, 15, 16, 18, 22, 23, 24, 26, 28, 29, 30, 31] + list(range(41, 73))
+df = df.drop(df.columns[cols_to_drop], axis=1)
+
+# Rename column
+rename_map = {
+    "Response ID": "Response_ID",
+    "What year were you born?": "Age",
+    "What is your gender?": "Gender",
+    "Which of the following best describes your industry?": "Industry",
+    "Which of the following best describes your current occupation?": "Job_type",
+    "How many people are currently employed by your organisation?": "Organisation_Size",
+    "Do you manage people as part of your current occupation?": "Managing_position",
+    "Which of the following best describes your household?": "Household",
+    "How long have you been in your current job?": "Years_in_job",
+    "Thinking about your current job, how much of your time did you spend remote working last year?": "Remote_pct_last_year",
+    "Thinking about remote working last year, how strongly do you agree or disagree with the following statements? - My organisation encouraged people to work remotely": "Org_encouraged_remote_last_year",
+    "Thinking about remote working last year, how strongly do you agree or disagree with the following statements? - I could easily collaborate with colleagues when working remotely": "Collaboration_remote_last_year",
+    "How much of your time would you have preferred to work remotely last year?": "Preferred_remote_last_year",
+    "Thinking about your current job, how much of your time did you spend remote working in the last 3 months?": "Remote_pct_last_3_months",
+    "Thinking about remote working in the last 3 months, how strongly do you agree or disagree with the following statements? - My organisation encouraged people to work remotely": "Org_encouraged_remote_3_months",
+    "Thinking about remote working in the last 3 months, how strongly do you agree or disagree with the following statements? - I could easily collaborate with colleagues when working remotely": "Collaboration_remote_3_months",
+    "How much of your time would you have preferred to work remotely in the last 3 months?": "Preferred_remote_3_months",
+    "This question is about your productivity. Productivity means what you produce for each hour that you work. It includes the amount of work you achieve each hour, and the quality of your work each hour.  \nPlease compare your productivity when you work remotely to when you work at your employer\x92s workplace.  \nRoughly how productive are you, each hour, when you work remotely?": "Productivity_remote_vs_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Preparing for work and commuting": "Commute_hours_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Working": "Working_hours_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Personal and family time": "Personal_family_hours_workplace",
+    "On a day when you attend your employer's workplace, how many hours would you spend doing the following activities? - Caring and domestic responsibilities": "Domestic_hours_workplace",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Preparing for work and commuting": "Commute_hours_remote",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Working": "Working_hours_remote",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Personal and family time": "Personal_family_hours_remote",
+    "On a day when you do remote work, how many hours would you spend doing the following activities? - Caring and domestic responsibilities": "Domestic_hours_remote"}
+df.rename(columns=rename_map, inplace=True)
+
+# 1. Organisation Size
+df["Organisation_Size"] = df["Organisation_Size"].replace({
+    "I am the only employee": "Solo business",
+    "Between 1 and 4": "Micro enterprise",
+    "Between 5 and 19": "Small enterprise",
+    "Between 20 and 199": "Medium enterprise",
+    "More than 200": "Large / Corporate enterprise"}).fillna("Other / Unspecified")
+
+# 2. Gender & Managing Position
+df = df[df["Gender"] != "Rather not say"]
+df["Gender"] = df["Gender"].replace({"Male": 0, "Female": 1}).astype("category")
+df["Managing_position"] = df["Managing_position"].replace({"No": 0, "Yes": 1}).astype("category")
+df = df.dropna(subset=["Managing_position"])
+
+# 3. Age (convert birth year to age in 2020)
+df["Age"] = 2020 - df["Age"]
+
+# 4. Years in job
+df["Years_in_job"] = df["Years_in_job"].replace({
+    "More than 5 years": "5+",
+    "Between 1 and 5 years": "5-",
+    "Between 6 and 12 months": "1-"})
+
+# 5. Likert scale mapping
+likert_mapping = {
+    "Strongly disagree": 1,
+    "Somewhat disagree": 2,
+    "Neither agree nor disagree": 3,
+    "Somewhat agree": 4,
+    "Strongly agree": 5}
+likert_cols = [
+    "Org_encouraged_remote_last_year",
+    "Collaboration_remote_last_year",
+    "Org_encouraged_remote_3_months",
+    "Collaboration_remote_3_months"]
+df[likert_cols] = df[likert_cols].replace(likert_mapping).fillna(3)
+
+# 6. Remote percentages mapping
+remote_mapping = {
+    "Rarely or never": 0,
+    "Less than 10% of my time": 5,
+    "10%": 10,
+    "20%": 20,
+    "30%": 30,
+    "40%": 40,
+    "50% - About half of my time": 50,
+    "50% - I spent about half of my time remote working": 50,
+    "60%": 60,
+    "70%": 70,
+    "80%": 80,
+    "90%": 90,
+    "100% - All of my time": 100,
+    "100% - I spent all of my time remote working": 100,
+    "I would not have preferred to work remotely": 0}
+percent_cols = [
+    "Preferred_remote_last_year",
+    "Remote_pct_last_year",
+    "Remote_pct_last_3_months",
+    "Preferred_remote_3_months"]
+for col in percent_cols:
+    df[col] = df[col].astype(str).str.replace("\xa0", "", regex=True).str.strip().replace(remote_mapping)
+    df[col] = pd.to_numeric(df[col], errors="coerce") / 100  # Convert to proportion
+
+# 7. Productivity cleaning
+def parse_productivity(val):
+    if pd.isna(val):
+        return None
+    val = str(val).replace("\x92", "'")  # Fix apostrophe
+    if "more productive" in val:
+        return int(val.split("%")[0].replace("I'm ", "").strip())
+    elif "less productive" in val:
+        return -int(val.split("%")[0].replace("I'm ", "").strip())
+    elif "same" in val:
+        return 0
+    return None
+df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].apply(parse_productivity)
+```
+```{python}
 #| label: dist
 #| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
