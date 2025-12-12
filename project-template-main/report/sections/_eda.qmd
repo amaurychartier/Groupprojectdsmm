@@ -131,56 +131,76 @@ def parse_productivity(val):
     return None
 df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].apply(parse_productivity)
 ```
+
+From this code we got the full results of all our variables in terms of distribution sorted by occurrence. The relevant information we gathered from these are the followings:
+
 ```{python}
 #| label: dist
 #| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
 
 for col in df.columns:
-    print(f"\n--- {col} ---")
-    print(df[col].value_counts(dropna=False))
+    print("\n--- Age ---")
+    print(df["Age"].value_counts(dropna=False))
 ```
-
-
-From this code we got the full results of all our variables in terms of distribution sorted by occurrence. The relevant information we gathered from these are the followings:
 
 -   Age: we have some outliers for the age variable with 2 people 120 years old that needs to be treated
 
+```{python}
+#| label: dist
+#| fig-cap: Distribution
+# Code visibility controlled by format settings in report.qmd
+
+for col in df.columns:
+    print("\n--- Gender ---")
+    print(df["Gender"].value_counts(dropna=False))
+```
+
 -   Gender: good balance (604 / (604+766) = 44% of women)
+
+```{python}
+#| label: dist
+#| fig-cap: Distribution
+# Code visibility controlled by format settings in report.qmd
+
+for col in df.columns:
+    print("\n--- Years_in_job ---")
+    print(df["Years_in_job"].value_counts(dropna=False))
+```
+
+-   Years in job: sample is quite experienced with only 11% with less than 1 year of experience.
+
+```{python}
+#| label: dist
+#| fig-cap: Distribution
+# Code visibility controlled by format settings in report.qmd
+
+for col in df.columns:
+    print("\n--- Productivity_remote_vs_workplace ---")
+    print(df["Productivity_remote_vs_workplace"].value_counts(dropna=False))
+```
+
+- Productivity remote vs workplace: we can see that for most of them productivity is either equivalent, or they even gained in productivity (46% gained between 20 to 50% of productivity).
 
 ## Distribution Plot
 
-```{python}
-#| label: fig-performance-dist
-#| fig-cap: "Distribution of performance scores showing approximately normal distribution"
-# Code visibility controlled by format settings in report.qmd
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-plt.tight_layout()
-plt.show()
-```
-
-## Summary Statistics
+Concretely, if we look at the distribution of the change in productivity with this code :  
 
 ```{python}
-#| label: tbl-summary-stats
-#| tbl-cap: "Summary statistics for performance scores"
 # Code visibility controlled by format settings in report.qmd
-
+# Violin Plot: Productivity by Organisation Size 
+plt.figure(figsize=(8,4)) 
+sns.violinplot(x=df['Organisation_Size'], y=df['Productivity_remote_vs_workplace']) 
+plt.title('Productivity Change by Organisation Size') 
+plt.xlabel('Organisation Size') 
+plt.ylabel('Productivity Change (%)') 
+plt.show() 
 
 ```
 
-## Box Plot
-
-```{python}
-#| label: fig-performance-box
-#| fig-cap: "Box plot showing the five-number summary and outliers"
-# Code visibility controlled by format settings in report.qmd
+In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated. 
 
 
-```
 
 ## Bivariate Analysis
 
