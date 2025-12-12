@@ -135,8 +135,6 @@ df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].
 From this code we got the full results of all our variables in terms of distribution sorted by occurrence. The relevant information we gathered from these are the followings:
 
 ```{python}
-#| label: dist
-#| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
 
 for col in df.columns:
@@ -147,8 +145,6 @@ for col in df.columns:
 -   Age: we have some outliers for the age variable with 2 people 120 years old that needs to be treated
 
 ```{python}
-#| label: dist
-#| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
 
 for col in df.columns:
@@ -159,8 +155,6 @@ for col in df.columns:
 -   Gender: good balance (604 / (604+766) = 44% of women)
 
 ```{python}
-#| label: dist
-#| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
 
 for col in df.columns:
@@ -171,8 +165,6 @@ for col in df.columns:
 -   Years in job: sample is quite experienced with only 11% with less than 1 year of experience.
 
 ```{python}
-#| label: dist
-#| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
 
 for col in df.columns:
