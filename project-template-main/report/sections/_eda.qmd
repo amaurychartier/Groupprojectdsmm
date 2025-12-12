@@ -136,10 +136,11 @@ df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].
 #| fig-cap: Distribution
 # Code visibility controlled by format settings in report.qmd
 
-for col in df.columns: 
-print(f"\n--- {col} ---") 
-print(df[col].value_counts(dropna=False)) 
+for col in df.columns:
+    print(f"\n--- {col} ---")
+    print(df[col].value_counts(dropna=False))
 ```
+
 
 From this code we got the full results of all our variables in terms of distribution sorted by occurrence. The relevant information we gathered from these are the followings:
 
