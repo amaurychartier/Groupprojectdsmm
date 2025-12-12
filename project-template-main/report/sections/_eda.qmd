@@ -137,7 +137,6 @@ From this code we got the full results of all our variables in terms of distribu
 ```{python}
 # Code visibility controlled by format settings in report.qmd
 
-for col in df.columns:
     print("\n--- Age ---")
     print(df["Age"].value_counts(dropna=False))
 ```
@@ -147,7 +146,6 @@ for col in df.columns:
 ```{python}
 # Code visibility controlled by format settings in report.qmd
 
-for col in df.columns:
     print("\n--- Gender ---")
     print(df["Gender"].value_counts(dropna=False))
 ```
@@ -157,7 +155,6 @@ for col in df.columns:
 ```{python}
 # Code visibility controlled by format settings in report.qmd
 
-for col in df.columns:
     print("\n--- Years_in_job ---")
     print(df["Years_in_job"].value_counts(dropna=False))
 ```
@@ -167,7 +164,6 @@ for col in df.columns:
 ```{python}
 # Code visibility controlled by format settings in report.qmd
 
-for col in df.columns:
     print("\n--- Productivity_remote_vs_workplace ---")
     print(df["Productivity_remote_vs_workplace"].value_counts(dropna=False))
 ```
