@@ -247,27 +247,3 @@ fig, ax = plt.subplots(figsize=(8, 5))
 :::
 
 ## Key Findings
-
-1.  **Distribution patterns**: The performance scores shown in @fig-performance-dist follow an approximately normal distribution with a mean of `{python} f'{dummy_performance["performance"].mean():.2f}'` and standard deviation of `{python} f'{dummy_performance["performance"].std():.2f}'`.
-
-    **Interpretation**: This normal distribution suggests that most students perform around the average, with fewer students at the extremes (very high or very low scores). The relatively small standard deviation indicates consistent performance across the group. This pattern is typical in educational settings and suggests that the assessment was well-calibrated meaning not too easy (which would cause ceiling effects) nor too difficult (which would cause floor effects). The normality assumption also validates the use of parametric statistical tests for subsequent analyses.
-
-2.  **Outliers and data quality**: The box plot (@fig-performance-box) reveals minimal outliers, with only a few observations falling below the lower whisker.
-
-    **Interpretation**: The scarcity of outliers suggests good data quality and consistent measurement. The few low-performing outliers warrant further investigation - they could represent students who faced unusual circumstances or measurement errors. However, their small number means they are unlikely to significantly impact our overall conclusions. This finding gives us confidence in proceeding with the full dataset without extensive outlier removal.
-
-3.  **Group differences**: @fig-performance-by-instructor demonstrates noticeable variation in performance across different instructors, with some instructors showing higher median scores than others. The ANOVA test (@tbl-anova-test) confirms these differences are `{python} 'statistically significant (p < 0.05)' if p_value < 0.05 else 'not statistically significant (p ≥ 0.05)'`.
-
-    **Interpretation**: `{python} 'The significant differences across instructors raise important questions about teaching effectiveness, grading consistency, or student assignment to sections. This finding suggests that "instructor" should be included as a control variable in any regression models predicting performance.' if p_value < 0.05 else 'The lack of significant differences suggests that instructor assignment does not substantially impact performance, or that grading standards are well-harmonized across sections.'` It also indicates that comparing students across different sections requires careful consideration. From a policy perspective, this might warrant investigating whether certain teaching methods are more effective or whether grading standards need to be harmonized across sections.
-
-4.  **Relationships**: The correlation matrix (@fig-correlation-matrix) reveals several interesting patterns:
-
-    -   Strong positive correlation (r = `{python} f'{corr_matrix.loc["Experience", "Salary"]:.2f}'`) between Experience and Salary
-    -   Moderate positive correlation (r = `{python} f'{corr_matrix.loc["Experience", "Performance"]:.2f}'`) between Experience and Performance
-    -   Weak correlation (r = `{python} f'{corr_matrix.loc["Age", "Performance"]:.2f}'`) between Age and Performance
-
-    **Interpretation**: The Experience-Salary correlation aligns with economic theory that experience is rewarded in labor markets. The Experience-Performance correlation suggests that experience contributes to better performance, though other factors clearly matter as well. Interestingly, Age shows minimal correlation with Performance, suggesting that chronological age alone doesn't predict success - what matters is relevant experience. These patterns will guide our variable selection for predictive modeling, favoring Experience over Age as a key predictor.
-
-5.  **Experience-Performance relationship**: @fig-scatter-experience-performance clearly shows a positive linear relationship, with more experienced individuals tending to have higher performance scores. The correlation coefficient is `{python} f'{corr:.2f}'`.
-
-    **Interpretation**: The linear relationship visible in the scatter plot confirms that experience has a consistent, positive effect on performance. However, the substantial scatter around the regression line indicates that experience alone doesn't determine performance - individual differences and other factors play important roles. This suggests that while experience is valuable, organizations shouldn't rely solely on it when making hiring or promotion decisions.
