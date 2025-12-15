@@ -1,30 +1,4 @@
-# Methods *(optional, only if you have models)*
-
-::: {.callout-note}
-## When to Include This Section
-
-Include a Methods section if you:
-
-- Apply statistical models (linear regression, logistic regression, etc.)
-- Perform hypothesis testing
-- Use machine learning algorithms
-- Conduct advanced statistical analyses
-
-If your project is primarily exploratory (descriptive statistics and visualizations only), you can skip this section or keep it minimal.
-:::
-
-Outline the statistical methods or models selected, along with the rationale for their selection.
-
-**Important**: Don't just show model output, **explain your choices**:
-
-- **Why** did you choose this particular method?
-- **What** assumptions does it make, and do your data meet them?
-- **How** does this method help answer your research questions?
-
-```{python}
-#| label: initial-analysis
-
-```
+# Methods
 
 ::: {.callout-important}
 ## Interpretation is Essential!
@@ -44,17 +18,4 @@ However, the model's pseudo-R² of 0.22 indicates that these predictors explain 
 
 Provide your results or observations from applying statistical methods, then **discuss them thoroughly** in the context of your research questions and project goals.
 
-::: {.callout-tip}
-## Structure Your Discussion
-
-A good discussion:
-
-1. **States the finding** clearly (reference tables/figures)
-2. **Interprets the result** (what does it mean?)
-3. **Connects to research questions** (how does it answer your questions?)
-4. **Relates to domain knowledge** (does it align with theory or prior research?)
-5. **Acknowledges limitations** (what are the caveats?)
-6. **Suggests implications** (what should we do with this information?)
-
 **Example**: "Our regression analysis shows that experience significantly predicts performance (β = 0.01, p < 0.001), supporting our hypothesis that skill develops over time. This aligns with learning curve theory in organizational psychology and suggests that training programs should emphasize sustained practice. However, the wide confidence interval (95% CI: [0.005, 0.015]) indicates substantial individual variation, meaning experience alone cannot guarantee high performance."
-:::
