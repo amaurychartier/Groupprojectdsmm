@@ -191,13 +191,18 @@ The histogram we obtain from the code shows an important part of 0 meaning for a
 ## Bivariate Analysis
 
 ```{python}
-# 4. Violin Plot: Productivity by Organisation Size
-plt.figure(figsize=(8,4))
-sns.violinplot(x=df['Organisation_Size'], y=df['Productivity_remote_vs_workplace'])
-plt.title('Productivity Change by Organisation Size')
-plt.xlabel('Organisation Size')
-plt.ylabel('Productivity Change (%)')
-plt.show()
+fig = px.violin(
+    df,
+    x="Organisation_Size",
+    y="Productivity_remote_vs_workplace",
+    box=True,        # affiche aussi le boxplot à l'intérieur
+    points="all",    # affiche les points individuels
+    title="Productivity Change by Organisation Size"
+)
+
+fig.update_xaxes(title="Organisation Size")
+fig.update_yaxes(title="Productivity Change (%)")
+fig.show()
 ```
 
 In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated.
