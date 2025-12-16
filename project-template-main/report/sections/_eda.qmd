@@ -182,63 +182,62 @@ The histogram we obtain from the code shows an important part of 0 meaning for a
 ## Bivariate Analysis
 
 ```{python}
+
 import plotly.express as px
 import plotly.graph_objects as go
 
-# Ordre logique des catégories (adapte si nécessaire à tes labels exacts)
-org_order = [
-    "Small (1–19)",
-    "Medium (20–199)",
-    "Large (200–499)",
-    "Very large (500+)"]
+# Ordre numérique cohérent avec le mapping précédent
+org_order_num = [1, 2, 3, 4, 5]
+ticktext = [
+    "Solo business",
+    "Micro enterprise",
+    "Small enterprise",
+    "Medium enterprise",
+    "Large / Corporate enterprise"
+]
 
 fig = px.violin(
     df,
     x="Organisation_Size",
     y="Productivity_remote_vs_workplace",
     color="Organisation_Size",
-    category_orders={"Organisation_Size": org_order},
+    category_orders={"Organisation_Size": org_order_num},
     box=True,
-    points=False,   # enlève les points → plus clean
+    points=False,
     title="Productivity Change by Organisation Size",
     labels={
         "Organisation_Size": "Organisation size",
-        "Productivity_remote_vs_workplace": "Productivity change (%)"})
+        "Productivity_remote_vs_workplace": "Productivity change (%)"
+    }
+)
 
-# Moyennes par taille d’organisation
+# Moyennes par taille (en gardant l’ordre numérique)
 means = (
-    df.groupby("Organisation_Size", observed=False)
-      ["Productivity_remote_vs_workplace"]
+    df.groupby("Organisation_Size", observed=False)["Productivity_remote_vs_workplace"]
       .mean()
-      .reindex(org_order))
+      .reindex(org_order_num)
+)
 
 fig.add_trace(
     go.Scatter(
-        x=means.index,
+        x=list(range(1, 6)),       # positions 1..5
         y=means.values,
         mode="markers",
-        marker=dict(
-            symbol="diamond",
-            size=11,
-            color="black",
-            line=dict(width=1)),
-        name="Mean"))
+        marker=dict(symbol="diamond", size=11, color="black", line=dict(width=1)),
+        name="Mean"
+    )
+)
 
-# Ligne de référence à 0%
-fig.add_hline(
-    y=0,
-    line_dash="dash",
-    opacity=0.6)
+fig.add_hline(y=0, line_dash="dash", opacity=0.6)
 
-# Layout clean
 fig.update_layout(
     template="plotly_white",
     title=dict(x=0.5),
     showlegend=False,
     margin=dict(l=60, r=30, t=80, b=50),
-    xaxis=dict(showgrid=False),
-    yaxis=dict(zeroline=False))
-fig.show()
+    xaxis=dict(showgrid=False, tickmode="array", tickvals=org_order_num, ticktext=ticktext),
+    yaxis=dict(zeroline=False)
+)
 ```
 
 In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated. 
