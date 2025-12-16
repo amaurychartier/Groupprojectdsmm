@@ -23,7 +23,7 @@ In addition, Australia’s geographical isolation likely delayed the initial int
 
 ::: {#fig-comparison layout-ncol=2 layout-valign="bottom"}
 
-![comparison](images/Australia_vs_countries.png){#fig-after width=100%}
+![comparison](images/Australia_vs_countries.png){#fig-after width=300%}
 
 The emotional journey of a data scientist debugging their code
 :::
