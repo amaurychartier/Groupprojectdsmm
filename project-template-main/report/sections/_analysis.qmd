@@ -140,8 +140,8 @@ $$
 + \beta_1 \,\text{RemoteShare}_i
 + \beta_2 \,\text{Age}_i
 + \beta_3 \,\text{OrganisationSize}_i
-+ \beta_4 \,\text{ManagingPosition}_i
-+ \beta_5 \,\text{OrgEncouragement}_i
++ \beta_4 \,\text{ManagingPosition}_i 
+\n + \beta_5 \,\text{OrgEncouragement}_i
 + \beta_6 \,\text{Collaboration}_i
 + \varepsilon_i
 $$
