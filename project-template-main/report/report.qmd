@@ -58,4 +58,8 @@ execute:
   # Note: echo setting is controlled per-format above (HTML, PDF, DOCX)
 ---
 
-{{< include sections/_introduction.qmd >}} {{< include sections/_data.qmd >}} {{< include sections/_eda.qmd >}} {{< include sections/_analysis.qmd >}} {{< include sections/_conclusion.qmd >}}
+{{< include sections/_introduction.qmd >}} 
+{{< include sections/_data.qmd >}} 
+{{< include sections/_eda.qmd >}} 
+{{< include sections/_analysis.qmd >}} 
+{{< include sections/_conclusion.qmd >}}
