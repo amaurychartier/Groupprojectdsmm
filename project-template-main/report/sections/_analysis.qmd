@@ -12,8 +12,12 @@ Figure X plots productivity change against the share of time spent working remot
 **Baseline regression model**
 
 To formalise this relationship, productivity change is first modelled using a simple ordinary least squares (OLS) regression with remote work intensity as the only explanatory variable:
-
-〖"Productivity" 〗_i=β_0+β_1 " " 〖"RemoteShare" 〗_i+ε_i
+$$
+\text{Productivity}_i =
+\beta_0
++ \beta_1 \,\text{RemoteShare}_i
++ \varepsilon_i
+$$
 
 ```{python}
 fig = px.scatter(
@@ -129,8 +133,17 @@ fig.show()
 
 The analysis is then extended by including additional explanatory variables that capture individual and organisational characteristics:
 
-〖"Productivity" 〗_i=β_0+β_1 " " 〖"RemoteShare" 〗_i+β_2 " " 〖"Age" 〗_i+β_3 " " 〖"OrganisationSize" 〗_i+β_4 " " 〖"ManagingPosition" 〗_i+β_5 " " 〖"OrgEncouragement" 〗_i+β_6 " " 〖"Collaboration" 〗_i+ε_i
-
+$$
+\text{Productivity}_i =
+\beta_0
++ \beta_1 \,\text{RemoteShare}_i
++ \beta_2 \,\text{Age}_i
++ \beta_3 \,\text{OrganisationSize}_i
++ \beta_4 \,\text{ManagingPosition}_i
++ \beta_5 \,\text{OrgEncouragement}_i
++ \beta_6 \,\text{Collaboration}_i
++ \varepsilon_i
+$$
 
 These variables were selected based on exploratory analysis and correlation checks, as they showed meaningful associations with productivity change and are directly related to working conditions under remote work.
 After including these controls, the coefficient on remote work intensity remains positive and statistically significant, although slightly smaller, at around 9.6. Importantly, the explanatory power of the model improves: the R-squared increases from approximately 0.02 in the baseline model to about 0.05 in the extended specification. This increase indicates that organisational context and collaboration quality account for an additional share of the variation in productivity changes.
