@@ -163,11 +163,11 @@ print("\n--- Productivity_remote_vs_workplace ---")
 print(df["Productivity_remote_vs_workplace"].value_counts(dropna=False))
 ```
 
-- Productivity remote vs workplace: we can see that for most of them productivity is either equivalent, or they even gained in productivity (46% gained between 20 to 50% of productivity).
+-   Productivity remote vs workplace: we can see that for most of them productivity is either equivalent, or they even gained in productivity (46% gained between 20 to 50% of productivity).
 
 ## Distribution Plot
 
-Concretely, if we look at the distribution of the change in productivity with this code :  
+Concretely, if we look at the distribution of the change in productivity with this code :
 
 ```{python}
 fig = px.histogram(df, x='Productivity_remote_vs_workplace', nbins=30, title="Histogramme de la productivité")
@@ -177,7 +177,7 @@ print("Skewness change in productivity:")
 print(df['Productivity_remote_vs_workplace'].skew())
 ```
 
-The histogram we obtain from the code shows an important part of 0 meaning for a lot of people working remotely doesn’t affect their productivity. Looking at the skewness (-0.13), we can deduce that data is significantly more on the right of the graph, meaning that people are more productive being at home for work.  
+The histogram we obtain from the code shows an important part of 0 meaning for a lot of people working remotely doesn’t affect their productivity. Looking at the skewness (-0.13), we can deduce that data is significantly more on the right of the graph, meaning that people are more productive being at home for work.
 
 ## Bivariate Analysis
 
@@ -240,7 +240,8 @@ fig.update_layout(
 )
 ```
 
-In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated. 
+In this Violin plot, we can understand that the change in productivity is not really influenced by the size of the company. Nevertheless, we can observe for small enterprises that a negative change in productivity is even rarer. We can guess that people in small businesses don’t depend too much on working with peers and with teams, so going to the workplace is less necessary than in big companies and communications facilitated.
+
 ```{python}
 male_df = df[df['Gender'] == 0]
 female_df = df[df['Gender'] == 1]
@@ -275,9 +276,10 @@ fig.update_layout(
 fig.show()
 ```
 
-We wanted to look at the distribution of the managing positions based on the gender and we could see that almost 60% of men are managers compared to only 40% for women so this is factored to take into consideration when giving conclusions.  
+We wanted to look at the distribution of the managing positions based on the gender and we could see that almost 60% of men are managers compared to only 40% for women so this is factored to take into consideration when giving conclusions.
 
-## Correlation/Multivariate Analysis 
+## Correlation/Multivariate Analysis
+
 ```{python}
 labels = ['Working', 'Personal & Family', 'Domestic', 'Commute']
 
@@ -310,21 +312,102 @@ fig_workplace.update_layout(title="Distribution of Workplace Hours")
 fig_workplace.show()
 ```
 
-can see on those 2 pie charts representing the distribution of the day based on the time in hours working, commuting, for personnal and family, and domestic.  We can see that the time of work is sensibly the same for remote and workplace (50% compared to 48.8%). What is important here is to see that time to commute is divided by 3 when remote working so it gives more time for domesting and personnal/family time going from 39.6% of your day to 46%. This difference shows a better work/life balance for employees when remotely working. This could affect mental health positively.  
+can see on those 2 pie charts representing the distribution of the day based on the time in hours working, commuting, for personnal and family, and domestic. We can see that the time of work is sensibly the same for remote and workplace (50% compared to 48.8%). What is important here is to see that time to commute is divided by 3 when remote working so it gives more time for domesting and personnal/family time going from 39.6% of your day to 46%. This difference shows a better work/life balance for employees when remotely working. This could affect mental health positively.
 
 ## Key Findings
 
-**Univariate Analysis**
-- The sample is professionally experienced: only 11% have experience of less than 1 year. 
-- There is a correct balance between genders: 44% of the sample is composed by women.
-- Productivity is either not affected or positively impacted by remote work: 46% improved their productivity through remote work.
+**Univariate Analysis** - The sample is professionally experienced: only 11% have experience of less than 1 year. - There is a correct balance between genders: 44% of the sample is composed by women. - Productivity is either not affected or positively impacted by remote work: 46% improved their productivity through remote work.
 
-**Bivariate Analysis**
-Working on place or remotely does not affect small businesses productivity, from which we can conclude small-structure workers does not depend too much on working with peers and teams, and going physically to workplace is less necessary than in big companies and communications facilitated. 
+**Bivariate Analysis** Working on place or remotely does not affect small businesses productivity, from which we can conclude small-structure workers does not depend too much on working with peers and teams, and going physically to workplace is less necessary than in big companies and communications facilitated.
 
-Manager jobs are composed of men at a 60% rate whereas only 40% are women, a factor we must take into consideration when giving conclusions.  
+Manager jobs are composed of men at a 60% rate whereas only 40% are women, a factor we must take into consideration when giving conclusions.
 
-**Correlation/Multivariate Analysis**
-According to the distribution of the day based on the time in hours working, commuting, for personal and family, and domestic, we can observe that the time of work is sensibly the same remotely and physically at work (50% compared to 48.8%). 
-Furthermore, time to commute is divided by 3 when working remotely, which gives more time for domestic activities and personal/family time going from 39.6% of daytime to 46%. This difference shows a better work/life balance for employees through remote work, an element that could positively affect mental health.  
+**Correlation/Multivariate Analysis** According to the distribution of the day based on the time in hours working, commuting, for personal and family, and domestic, we can observe that the time of work is sensibly the same remotely and physically at work (50% compared to 48.8%). Furthermore, time to commute is divided by 3 when working remotely, which gives more time for domestic activities and personal/family time going from 39.6% of daytime to 46%. This difference shows a better work/life balance for employees through remote work, an element that could positively affect mental health.\
 There is a positive correlation of 0.14 between productivity and working remotely. However, this correlation coefficient remains positively low.
+
+## Findings and Discussion
+
+**Perceived productivity (Productivity_remote_vs_workplace)**
+
+The distribution remains wide but not excessively dispersed. Both positive and negative self-reported productivity changes appear, with no clear dominant direction. 
+
+**Remote work share (Remote_pct\_\*)**
+
+Clear multimodal distribution:
+- a large cluster at 0 (never remote),
+- a midpoint cluster around 0.5 (hybrid),
+- and a peak at 1.0 (fully remote).
+
+The regression plot shows a weak positive trend between remote work percentage and perceived productivity.
+
+Remote_pct\_*: meaning all the columns that start with Remote_pct\_ – in our context, remote_pct_last_year and remote_pct_last_3_months variables. 
+ 
+**Hours commute / work / personal / domestic**
+ 
+These variables exhibit high variability, and under the classical IQR test, some show large numbers of outliers (Working_hours_workplace: 271, Commute_hours_remote: 142).
+ 
+Commute_hours_remote is essentially zero for most respondents, whereas workplace commute shows very high values for a subgroup.
+
+**Satisfaction / Preferences (Preferred_remote\_*)** 
+
+A significant proportion of respondents indicate a preference for higher levels of remote work — suggesting overall satisfaction with remote arrangements. 
+
+**Demographics**
+
+Age is concentrated within typical working-age ranges but includes two implausible values around 120, considered invalid extremes under both IQR methods. Gender distribution shows moderate imbalance. 
+
+**Outliers & cleaning (3×IQR method)** 
+
+Outlier counts highlight substantial structural variability in the dataset. Using the classical 1.5×IQR rule would remove more than 40% of the sample, which risks discarding legitimate behavioral diversity. Using the 3×IQR rule instead focuses only on filtering clear data errors or implausible extreme values (ages \>100, commute hours \>10, negative preferred remote percentages). 
+With this more cautious threshold and a tolerance of zero outliers per row, the dataset is reduced from 1370 to 1196 rows, meaning only obviously invalid extreme records were removed. This approach preserves representativity while still improving data quality.
+
+## Interpretation (per finding) 
+
+Perceived productivity Histograms and boxplots show the distribution of Productivity_remote_vs_workplace is still wide after cleaning.
+
+The regression line suggests a slight positive correlation between remote work percentage and productivity. The mean appears small relative to the variance, indicating high heterogeneity in productivity experiences. Some individuals report substantial productivity gains, others substantial losses. 
+
+Through these observations, we directly answer this question: “How does remote work influence employees’ overall productivity?”, and the answer is: effects differ strongly across individuals; no universal impact exists. It is consistent with Bloom et al. (2015) and COVID-era studies showing mixed or context-dependent productivity outcomes. 
+
+The limitations are composed of biases and complexity-lacking interpretation such as Self-reported measure bias and univariate-only interpretation. 
+
+Thus, organisations should adopt flexible and individualized policies, and further multivariate analysis should identify moderators (job type, household structure, management role…).
+
+**Job satisfaction / preferences**
+
+Preferred_remote\_\* shows many respondents preferring more remote work. Preference likely reflects higher satisfaction with remote work conditions relative to on-site conditions.
+
+It directly informs remote work increases job satisfaction for many workers and addresses: “Has job satisfaction increased or decreased due to remote working?”: univariate evidence points to increased satisfaction for many workers. 
+Preference does not equal measured job satisfaction; there is a potential selection bias. Hybrid working models and flexible remote-work options should be explored.
+
+**Social connection / collaboration**
+Likert variables for collaboration (Collaboration_remote\_\*) are centered around neutral values (Likert value: 3). At an aggregate level, respondents do not report a clear decline or improvement in collaboration while working remotely.
+
+It addresses the question: "How does remote working affect employees’ ability to maintain social connections and avoid isolation?”. Digital collaboration tools may offset loss of informal interactions and individual variability likely remains. Likert responses are proxies; no direct psychological isolation is measured.
+
+However, a preference-based bias might be taken into consideration: as remote work seems more desirable for most respondents, they might answer in a way that avoids remote work discreditation. Organizations should focus interventions on subgroups reporting lower collaboration.
+
+Structural factors (commute and personal time) Remote commute is almost zero; remote work yields increase in personal, family, and domestic hours. Savings in commute time and reallocation toward personal activities are plausible drivers of increased satisfaction with remote work. We can extrapolate this job and free-time balance to an enhanced mental health and less stressed psychology.
+
+To “Which factors contribute most to remote-work satisfaction?”, we can thus conclude that Time savings and increased autonomy are strong candidates, which aligns with research showing commute reduction increases well-being and perceived control over time. However, the trends are univariate only; further multivariate modeling might be needed. Policies should preserve gains in personal time and support work-life balance.
+
+## Overall answers to research questions
+
+**Productivity** 
+
+Remote work has a mixed and highly heterogeneous effect on productivity; the average effect is not clearly positive or negative.
+
+**Social connection / isolation**
+
+Aggregate responses are neutral and no evidence of widespread isolation or deterioration of collaboration is detected. 
+
+**Job satisfaction**
+
+Preference patterns imply that for most workers, job satisfaction has increased under remote arrangements. 
+
+**Drivers of satisfaction** 
+
+The strongest univariate candidates are:
+- reduced commute,
+- increased personal/family time,
+- greater schedule flexibility.
