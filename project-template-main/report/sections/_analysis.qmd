@@ -30,20 +30,6 @@ fig.update_yaxes(title="Productivity Change (%)")
 fig.show()
 ```
 
-```{python}
-import statsmodels.api as sm
-
-vars_extended = [
-    'Remote_pct_last_year',]
-
-tmp = df[vars_extended + ['Productivity_remote_vs_workplace']].dropna()
-
-X = sm.add_constant(tmp[vars_extended])
-y = tmp['Productivity_remote_vs_workplace']
-
-model_extended = sm.OLS(y, X).fit()
-print(model_extended.summary())
-```
 
 This baseline model captures the raw relationship between remote work intensity and productivity without accounting for any additional individual or organisational characteristics.
 The estimation results show that the coefficient on remote work intensity is positive and statistically significant. Moving from no remote work to full remote work is associated with an increase of approximately 11–12 percentage points in reported productivity. Despite this statistically significant effect, the explanatory power of the model remains very low, with an R-squared of around 0.02. This indicates that remote work intensity alone explains only a very small share of the variation in productivity changes across individuals.
@@ -145,23 +131,6 @@ The analysis is then extended by including additional explanatory variables that
 
 〖"Productivity" 〗_i=β_0+β_1 " " 〖"RemoteShare" 〗_i+β_2 " " 〖"Age" 〗_i+β_3 " " 〖"OrganisationSize" 〗_i+β_4 " " 〖"ManagingPosition" 〗_i+β_5 " " 〖"OrgEncouragement" 〗_i+β_6 " " 〖"Collaboration" 〗_i+ε_i
 
-```{python}
-vars_extended = [
-    'Remote_pct_last_year',
-    'Age',
-    'Organisation_Size',
-    'Managing_position',
-    'Org_encouraged_remote_last_year',
-    'Collaboration_remote_last_year']
-
-tmp = df[vars_extended + ['Productivity_remote_vs_workplace']].dropna()
-
-X = sm.add_constant(tmp[vars_extended])
-y = tmp['Productivity_remote_vs_workplace']
-
-model_extended = sm.OLS(y, X).fit()
-print(model_extended.summary())
-```
 
 These variables were selected based on exploratory analysis and correlation checks, as they showed meaningful associations with productivity change and are directly related to working conditions under remote work.
 After including these controls, the coefficient on remote work intensity remains positive and statistically significant, although slightly smaller, at around 9.6. Importantly, the explanatory power of the model improves: the R-squared increases from approximately 0.02 in the baseline model to about 0.05 in the extended specification. This increase indicates that organisational context and collaboration quality account for an additional share of the variation in productivity changes.
