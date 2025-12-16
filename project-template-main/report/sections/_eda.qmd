@@ -138,8 +138,17 @@ df["Productivity_remote_vs_workplace"] = df["Productivity_remote_vs_workplace"].
 From this code we got the full results of all our variables in terms of distribution sorted by occurrence. The relevant information we gathered from these are the followings:
 
 ```{python}
-print("\n--- Age ---")
-print(df["Age"].value_counts(dropna=False))
+age_counts = df["Age"].value_counts().sort_index()
+fig = px.bar(
+    x=age_counts.index,
+    y=age_counts.values,
+    labels={
+        "x": "Age",
+        "y": "Nombre d'individus"
+    },
+    title="Distribution de l'âge"
+)
+fig.show()
 ```
 
 -   Age: we have some outliers for the age variable with 2 people 120 years old that needs to be treated
