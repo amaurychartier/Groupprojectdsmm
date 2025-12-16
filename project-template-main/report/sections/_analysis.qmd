@@ -1,6 +1,5 @@
 # Methods
 
-
 **Remote Work Intensity and Productivity**
 
 This section examines the relationship between remote work intensity and self-reported productivity change using both graphical analysis and linear regression models.
