@@ -58,17 +58,4 @@ execute:
   # Note: echo setting is controlled per-format above (HTML, PDF, DOCX)
 ---
 
-{{< include sections/_introduction.qmd >}}
-{{< include sections/_data.qmd >}}
-{{< include sections/_eda.qmd >}}
-{{< include sections/_analysis.qmd >}}
-{{< include sections/_conclusion.qmd >}}
-
-## What Goes in Appendices?
-
-
-### Appendix A: Additional Exploratory Plots {#sec-appendix-plots}
-
-### Appendix B: Complete Code Listings {#sec-appendix-code}
-
-### Appendix C: Supplementary Tables {#sec-appendix-tables}
+{{< include sections/_introduction.qmd >}} {{< include sections/_data.qmd >}} {{< include sections/_eda.qmd >}} {{< include sections/_analysis.qmd >}} {{< include sections/_conclusion.qmd >}}

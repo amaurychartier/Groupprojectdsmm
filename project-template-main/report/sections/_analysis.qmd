@@ -1,21 +1,172 @@
 # Methods
 
-::: {.callout-important}
-## Interpretation is Essential!
 
-After showing model results, you **must interpret them**:
+**Remote Work Intensity and Productivity**
 
-**Example interpretation:**
+This section examines the relationship between remote work intensity and self-reported productivity change using both graphical analysis and linear regression models.
 
-"The Poisson regression model identifies three significant predictors of insurance claim frequency. Vehicle age shows a positive coefficient (β = 0.08, p < 0.01), indicating that each additional year of vehicle age increases expected claims by approximately 8%. Driver age has a negative coefficient (β = -0.02, p < 0.001), meaning older drivers file fewer claims. The urban location dummy variable (β = 0.15, p < 0.05) suggests urban drivers have 15% higher claim rates than rural drivers.
+**Exploratory relationship**
 
-However, the model's pseudo-R² of 0.22 indicates that these predictors explain only 22% of claim variation. Unobserved factors like driving behavior, road conditions, and individual risk tolerance likely account for the remaining variation. This suggests that while demographic variables are useful for pricing, insurers should not rely solely on them for risk assessment."
+Figure X plots productivity change against the share of time spent working remotely, together with a fitted linear regression line. The slope of the line is positive, and the Pearson correlation coefficient is approximately 0.14, indicating a weak positive association between remote work intensity and productivity change. Individuals who work remotely more frequently tend, on average, to report slightly higher productivity. However, the magnitude of this association is limited and should not be interpreted as causal.
 
-**Remember**: Model output without interpretation demonstrates technical skills but not understanding!
-:::
+**Baseline regression model**
 
-# Findings and Discussion
+To formalise this relationship, productivity change is first modelled using a simple ordinary least squares (OLS) regression with remote work intensity as the only explanatory variable:
 
-Provide your results or observations from applying statistical methods, then **discuss them thoroughly** in the context of your research questions and project goals.
+〖"Productivity" 〗_i=β_0+β_1 " " 〖"RemoteShare" 〗_i+ε_i
 
-**Example**: "Our regression analysis shows that experience significantly predicts performance (β = 0.01, p < 0.001), supporting our hypothesis that skill develops over time. This aligns with learning curve theory in organizational psychology and suggests that training programs should emphasize sustained practice. However, the wide confidence interval (95% CI: [0.005, 0.015]) indicates substantial individual variation, meaning experience alone cannot guarantee high performance."
+```{python}
+fig = px.scatter(
+    df,
+    x="Remote_pct_last_year",
+    y="Productivity_remote_vs_workplace",
+    trendline="ols",
+    title="Remote Work % vs Productivity Change (Regression)"
+)
+
+fig.update_xaxes(title="Remote Work Percentage")
+fig.update_yaxes(title="Productivity Change (%)")
+
+fig.show()
+```
+
+```{python}
+import statsmodels.api as sm
+
+vars_extended = [
+    'Remote_pct_last_year',]
+
+tmp = df[vars_extended + ['Productivity_remote_vs_workplace']].dropna()
+
+X = sm.add_constant(tmp[vars_extended])
+y = tmp['Productivity_remote_vs_workplace']
+
+model_extended = sm.OLS(y, X).fit()
+print(model_extended.summary())
+```
+
+This baseline model captures the raw relationship between remote work intensity and productivity without accounting for any additional individual or organisational characteristics.
+The estimation results show that the coefficient on remote work intensity is positive and statistically significant. Moving from no remote work to full remote work is associated with an increase of approximately 11–12 percentage points in reported productivity. Despite this statistically significant effect, the explanatory power of the model remains very low, with an R-squared of around 0.02. This indicates that remote work intensity alone explains only a very small share of the variation in productivity changes across individuals.
+
+**Productivity by remote work intensity groups**
+
+To complement the continuous analysis, productivity changes are also examined by grouping individuals into remote work intensity categories (0–20%, 20–50%, 50–80%, and 80–100%). This binned representation allows for a clearer comparison of productivity distributions across levels of remote work.
+
+The results show that median productivity gains increase once remote work exceeds 20% of working time and stabilise around +20% for medium to high levels of remote work intensity. Mean productivity changes follow a similar pattern, rising from approximately +10% in the lowest group to nearly +20% in the highest group.
+
+However, the distributions overlap substantially across groups, with wide dispersion in all categories and both positive and negative productivity changes observed at every level of remote work intensity. This highlights considerable individual heterogeneity and reinforces the conclusion that remote work intensity alone is insufficient to explain productivity outcomes.
+```{python}
+#  Data prep 
+tmp = df[['Remote_pct_last_year','Productivity_remote_vs_workplace']].dropna().copy()
+
+labels = ['0–20%', '20–50%', '50–80%', '80–100%']
+tmp['remote_bin'] = pd.cut(
+    tmp['Remote_pct_last_year'],
+    bins=[-0.01, 0.2, 0.5, 0.8, 1.01],
+    labels=labels
+)
+tmp['remote_bin'] = pd.Categorical(tmp['remote_bin'], categories=labels, ordered=True)
+
+# Summary table
+stats = (tmp.groupby('remote_bin', observed=False)['Productivity_remote_vs_workplace']
+         .agg(count='count', mean='mean', median='median')
+         .reset_index())
+
+stats['mean'] = stats['mean'].round(2)
+stats['median'] = stats['median'].round(2)
+
+#  Figure with subplot 
+fig = make_subplots(
+    rows=2, cols=1,
+    row_heights=[0.75, 0.25],
+    specs=[[{"type": "box"}],
+           [{"type": "table"}]],
+    vertical_spacing=0.08)
+
+# Boxplots (one trace per bin to force order)
+colors = px.colors.qualitative.Set2
+
+for i, label in enumerate(labels):
+    fig.add_trace(
+        go.Box(
+            y=tmp.loc[tmp['remote_bin'] == label, 'Productivity_remote_vs_workplace'],
+            name=label,
+            marker_color=colors[i],
+            boxpoints=False
+        ),
+        row=1, col=1)
+
+# Mean markers
+fig.add_trace(
+    go.Scatter(
+        x=labels,
+        y=stats['mean'],
+        mode='markers',
+        marker=dict(symbol='diamond', size=11, color='black'),
+        name='Mean'),
+    row=1, col=1)
+
+# Zero line
+fig.add_hline(y=0, line_dash="dash", opacity=0.6, row=1)
+
+# Table
+fig.add_trace(
+    go.Table(
+        header=dict(
+            values=["Remote work bin", "N", "Mean (%)", "Median (%)"],
+            fill_color="lightgrey",
+            align="center"),
+        cells=dict(
+            values=[
+                stats['remote_bin'],
+                stats['count'],
+                stats['mean'],
+                stats['median']
+            ],
+            align="center")),
+    row=2, col=1)
+
+#  Layout 
+fig.update_layout(
+    template="plotly_white",
+    title="Productivity change by remote work intensity (binned)",
+    title_x=0.5,
+    showlegend=False,
+    margin=dict(l=60, r=30, t=80, b=30),
+    yaxis_title="Productivity change (%)",
+    xaxis_title="Remote work percentage (binned)")
+
+fig.show()
+```
+
+**Extended regression model with controls**
+
+The analysis is then extended by including additional explanatory variables that capture individual and organisational characteristics:
+
+〖"Productivity" 〗_i=β_0+β_1 " " 〖"RemoteShare" 〗_i+β_2 " " 〖"Age" 〗_i+β_3 " " 〖"OrganisationSize" 〗_i+β_4 " " 〖"ManagingPosition" 〗_i+β_5 " " 〖"OrgEncouragement" 〗_i+β_6 " " 〖"Collaboration" 〗_i+ε_i
+
+```{python}
+vars_extended = [
+    'Remote_pct_last_year',
+    'Age',
+    'Organisation_Size',
+    'Managing_position',
+    'Org_encouraged_remote_last_year',
+    'Collaboration_remote_last_year']
+
+tmp = df[vars_extended + ['Productivity_remote_vs_workplace']].dropna()
+
+X = sm.add_constant(tmp[vars_extended])
+y = tmp['Productivity_remote_vs_workplace']
+
+model_extended = sm.OLS(y, X).fit()
+print(model_extended.summary())
+```
+
+These variables were selected based on exploratory analysis and correlation checks, as they showed meaningful associations with productivity change and are directly related to working conditions under remote work.
+After including these controls, the coefficient on remote work intensity remains positive and statistically significant, although slightly smaller, at around 9.6. Importantly, the explanatory power of the model improves: the R-squared increases from approximately 0.02 in the baseline model to about 0.05 in the extended specification. This increase indicates that organisational context and collaboration quality account for an additional share of the variation in productivity changes.
+Among the control variables, perceived collaboration quality when working remotely shows a strong positive association with productivity, while organisational encouragement of remote work is negatively associated. Age and managing position do not exhibit statistically significant effects once other factors are controlled for.
+
+# Interpretation
+
+Overall, the results convey a consistent message across graphical analysis and regression models. Remote work intensity is positively associated with productivity change, but the relationship is weak in magnitude and explains only a limited fraction of productivity differences. The increase in R-squared when adding organisational and collaboration-related variables confirms that productivity outcomes under remote work are influenced by multiple factors. While remote work intensity plays a role, individual heterogeneity and organisational conditions appear to be more important drivers of productivity changes.

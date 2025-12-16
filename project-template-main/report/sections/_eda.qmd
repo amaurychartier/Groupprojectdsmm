@@ -182,17 +182,62 @@ The histogram we obtain from the code shows an important part of 0 meaning for a
 ## Bivariate Analysis
 
 ```{python}
-# Violin Plot: Productivity by Organisation Size 
+import plotly.express as px
+import plotly.graph_objects as go
+
+# Ordre logique des catégories (adapte si nécessaire à tes labels exacts)
+org_order = [
+    "Small (1–19)",
+    "Medium (20–199)",
+    "Large (200–499)",
+    "Very large (500+)"]
+
 fig = px.violin(
     df,
     x="Organisation_Size",
     y="Productivity_remote_vs_workplace",
-    box=True,        # affiche aussi le boxplot à l'intérieur
-    points="all",    # affiche les points individuels
-    title="Productivity Change by Organisation Size")
-fig.update_xaxes(title="Organisation Size")
-fig.update_yaxes(title="Productivity Change (%)")
+    color="Organisation_Size",
+    category_orders={"Organisation_Size": org_order},
+    box=True,
+    points=False,   # enlève les points → plus clean
+    title="Productivity Change by Organisation Size",
+    labels={
+        "Organisation_Size": "Organisation size",
+        "Productivity_remote_vs_workplace": "Productivity change (%)"})
 
+# Moyennes par taille d’organisation
+means = (
+    df.groupby("Organisation_Size", observed=False)
+      ["Productivity_remote_vs_workplace"]
+      .mean()
+      .reindex(org_order))
+
+fig.add_trace(
+    go.Scatter(
+        x=means.index,
+        y=means.values,
+        mode="markers",
+        marker=dict(
+            symbol="diamond",
+            size=11,
+            color="black",
+            line=dict(width=1)),
+        name="Mean"))
+
+# Ligne de référence à 0%
+fig.add_hline(
+    y=0,
+    line_dash="dash",
+    opacity=0.6)
+
+# Layout clean
+fig.update_layout(
+    template="plotly_white",
+    title=dict(x=0.5),
+    showlegend=False,
+    margin=dict(l=60, r=30, t=80, b=50),
+    xaxis=dict(showgrid=False),
+    yaxis=dict(zeroline=False))
 fig.show()
 ```
 
@@ -268,22 +313,19 @@ fig_workplace.show()
 
 can see on those 2 pie charts representing the distribution of the day based on the time in hours working, commuting, for personnal and family, and domestic.  We can see that the time of work is sensibly the same for remote and workplace (50% compared to 48.8%). What is important here is to see that time to commute is divided by 3 when remote working so it gives more time for domesting and personnal/family time going from 39.6% of your day to 46%. This difference shows a better work/life balance for employees when remotely working. This could affect mental health positively.  
 
-To test correlation we put the percentage of remote work with the change of productivity. 
-```{python}
-fig = px.scatter(
-    df,
-    x="Remote_pct_last_year",
-    y="Productivity_remote_vs_workplace",
-    trendline="ols",
-    title="Remote Work % vs Productivity Change (Regression)"
-)
-
-fig.update_xaxes(title="Remote Work Percentage")
-fig.update_yaxes(title="Productivity Change (%)")
-
-fig.show()
-```
-
-We can see here a positive correlation which infers that when you spend more time remotely your productivity rises. In causality it could be interpreted as a good signal.  But the coefficient is of 0.14 so a low positive correlation.  
-
 ## Key Findings
+
+**Univariate Analysis**
+- The sample is professionally experienced: only 11% have experience of less than 1 year. 
+- There is a correct balance between genders: 44% of the sample is composed by women.
+- Productivity is either not affected or positively impacted by remote work: 46% improved their productivity through remote work.
+
+**Bivariate Analysis**
+Working on place or remotely does not affect small businesses productivity, from which we can conclude small-structure workers does not depend too much on working with peers and teams, and going physically to workplace is less necessary than in big companies and communications facilitated. 
+
+Manager jobs are composed of men at a 60% rate whereas only 40% are women, a factor we must take into consideration when giving conclusions.  
+
+**Correlation/Multivariate Analysis**
+According to the distribution of the day based on the time in hours working, commuting, for personal and family, and domestic, we can observe that the time of work is sensibly the same remotely and physically at work (50% compared to 48.8%). 
+Furthermore, time to commute is divided by 3 when working remotely, which gives more time for domestic activities and personal/family time going from 39.6% of daytime to 46%. This difference shows a better work/life balance for employees through remote work, an element that could positively affect mental health.  
+There is a positive correlation of 0.14 between productivity and working remotely. However, this correlation coefficient remains positively low.

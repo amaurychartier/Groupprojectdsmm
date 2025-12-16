@@ -6,7 +6,7 @@ Our objective in this project is to understand how remote work, following the CO
 
 As we began working with the dataset, we refined our focus on the social and psychological dimensions of remote work. To make the analysis easier to interpret, we also transformed qualitative survey responses into numerical values. And, in addition, we removed categories with very small sample sizes to keep the dataset consistent and avoid unreliable comparisons.
 
-## Research Questions 
+## Research Questions
 
 -   How does remote work influence employees’ overall productivity?
 -   How does remote working affect employees’ ability to maintain social connections and avoid feelings of isolation?
