@@ -16,16 +16,13 @@ The comparative analysis highlights substantial disparities in the evolution and
 With respect to mortality, a similar pattern is observed. The United States and Brazil exhibit the highest death tolls among the sample, while France occupies an intermediate position. In contrast, Australia displays a markedly lower mortality level, indicating a comparatively limited health impact of the pandemic.
 The analysis of active cases, defined as the number of individuals currently infected (total cases minus recoveries and deaths), reveals that active infections remained relatively high in the United States and Brazil at the time of data collection. 
 
-Interpretation of the Australian Case
+**Interpretation of the Australian Case**
 
 Based on our interpretation of the graphical results, Australia appears to have been relatively less affected by the COVID-19 pandemic, particularly in terms of mortality and active infections. Several structural and geographical factors may help explain this outcome. First, Australia has a comparatively younger population, and younger age groups were statistically less exposed to severe forms of the disease. Furthermore, the country is characterized by a large territory combined with a low population density, which naturally limits close interpersonal contact and reduces the speed of viral transmission.
 In addition, Australia’s geographical isolation likely delayed the initial introduction of the virus and facilitated the implementation of strict border control measures, which played a critical role during the early stages of the pandemic. Finally, early public health interventions and the overall efficiency of the healthcare system may also have contributed to limiting severe cases and fatalities.
 
 ::: {#fig-comparison layout-ncol=2 layout-valign="bottom"}
-
-![comparison](images/Australia_vs_countries.png){#fig-after width=300%}
-
-The emotional journey of a data scientist debugging their code
+![comparison](images/Australia_vs_countries.png){#fig-after width=100%}
 :::
 
 From a methodological standpoint, our study mostly uses correlation analysis and descriptive statistics, which help in finding patterns but cannot allow us to prove causation. For example, even if we discovered a slight positive correlation (r = 0.14) between the percentage of remote work and productivity change, this does not show that remote work raises productivity. These results could be impacted by additional unobserved factors including home environment, digital technologies, management assistance, or individual preferences. In addition, a number of important factors such as productivity, teamwork, and satisfaction are self-reported, which may create bias because workers may exaggerate or understate their experiences. 

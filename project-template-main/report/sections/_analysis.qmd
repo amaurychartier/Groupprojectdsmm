@@ -8,7 +8,7 @@ This section examines the relationship between remote work intensity and self-re
 
 **Exploratory relationship**
 
-Figure X plots productivity change against the share of time spent working remotely, together with a fitted linear regression line. The slope of the line is positive, and the Pearson correlation coefficient is approximately 0.14, indicating a weak positive association between remote work intensity and productivity change. Individuals who work remotely more frequently tend, on average, to report slightly higher productivity. However, the magnitude of this association is limited and should not be interpreted as causal.
+Figure plots productivity change against the share of time spent working remotely, together with a fitted linear regression line. The slope of the line is positive, and the Pearson correlation coefficient is approximately 0.14, indicating a weak positive association between remote work intensity and productivity change. Individuals who work remotely more frequently tend, on average, to report slightly higher productivity. However, the magnitude of this association is limited and should not be interpreted as causal.
 
 **Baseline regression model**
 

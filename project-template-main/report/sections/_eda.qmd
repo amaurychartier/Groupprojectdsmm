@@ -346,6 +346,7 @@ It directly informs remote work increases job satisfaction for many workers and 
 Preference does not equal measured job satisfaction; there is a potential selection bias. Hybrid working models and flexible remote-work options should be explored.
 
 **Social connection / collaboration**
+
 Likert variables for collaboration (Collaboration_remote\_\*) are centered around neutral values (Likert value: 3). At an aggregate level, respondents do not report a clear decline or improvement in collaboration while working remotely.
 
 It addresses the question: "How does remote working affect employees’ ability to maintain social connections and avoid isolation?”. Digital collaboration tools may offset loss of informal interactions and individual variability likely remains. Likert responses are proxies; no direct psychological isolation is measured.
