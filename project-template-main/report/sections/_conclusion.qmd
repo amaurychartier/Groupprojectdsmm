@@ -27,13 +27,6 @@ In addition, Australia’s geographical isolation likely delayed the initial int
 
 From a methodological standpoint, our study mostly uses correlation analysis and descriptive statistics, which help in finding patterns but cannot allow us to prove causation. For example, even if we discovered a slight positive correlation (r = 0.14) between the percentage of remote work and productivity change, this does not show that remote work raises productivity. These results could be impacted by additional unobserved factors including home environment, digital technologies, management assistance, or individual preferences. In addition, a number of important factors such as productivity, teamwork, and satisfaction are self-reported, which may create bias because workers may exaggerate or understate their experiences. 
 
-## Future Work
-
-- **Extend dataset:** "Include the 2021 wave of the Remote Working Survey and perform longitudinal comparisons to track changes over time."
-- **Enhance analytical approach:** "Use advanced statistical models like multiple regression to identify key predictors of productivity and satisfaction."
-- **Broaden contextual factors:** "Add variables on digital tools, communication habits, and mental health indicators for richer insights."
-- **Integrate mixed data types:** "Combine quantitative survey data with qualitative responses to capture nuanced experiences of remote work in other regions not only Australia."
-
 ## References
 
 - NSW Government. (2020). Remote Working Survey 2020 Dataset. Retrieved from https://data.nsw.gov.au/data/dataset/nsw-remote-working-survey
