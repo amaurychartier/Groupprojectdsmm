@@ -150,6 +150,6 @@ These variables were selected based on exploratory analysis and correlation chec
 After including these controls, the coefficient on remote work intensity remains positive and statistically significant, although slightly smaller, at around 9.6. Importantly, the explanatory power of the model improves: the R-squared increases from approximately 0.02 in the baseline model to about 0.05 in the extended specification. This increase indicates that organisational context and collaboration quality account for an additional share of the variation in productivity changes.
 Among the control variables, perceived collaboration quality when working remotely shows a strong positive association with productivity, while organisational encouragement of remote work is negatively associated. Age and managing position do not exhibit statistically significant effects once other factors are controlled for.
 
-# Interpretation
+## Interpretation
 
 Overall, the results convey a consistent message across graphical analysis and regression models. Remote work intensity is positively associated with productivity change, but the relationship is weak in magnitude and explains only a limited fraction of productivity differences. The increase in R-squared when adding organisational and collaboration-related variables confirms that productivity outcomes under remote work are influenced by multiple factors. While remote work intensity plays a role, individual heterogeneity and organisational conditions appear to be more important drivers of productivity changes.
