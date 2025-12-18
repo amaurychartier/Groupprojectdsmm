@@ -174,7 +174,7 @@ print(df["Productivity_remote_vs_workplace"].value_counts(dropna=False))
 
 -   Productivity remote vs workplace: we can see that for most of them productivity is either equivalent, or they even gained in productivity (46% gained between 20 to 50% of productivity).
 
-## Distribution Plot
+**Distribution Plot**
 
 Concretely, if we look at the distribution of the change in productivity with this code :
 
